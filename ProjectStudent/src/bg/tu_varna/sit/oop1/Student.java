@@ -51,7 +51,7 @@ public class Student {
     //Set methods
     public void setName (String name) throws StudentException {
         if (name == null || name.isEmpty()) {
-            throw new StudentException("Student name can not be null");
+            throw new StudentException(Error.STUDENT_NAME_NULL_VALUE.message);
         }
 
         this.name = name;
@@ -59,7 +59,7 @@ public class Student {
 
     public void setFacultyNumber (Integer facultyNumber) throws StudentException {
         if (facultyNumber == null || facultyNumber == 0) {
-            throw new StudentException("Student faculty number can not be null");
+            throw new StudentException(Error.STUDENT_FN_NULL_VALUE.message);
         }
 
         this.facultyNumber = facultyNumber;
@@ -67,7 +67,7 @@ public class Student {
 
     public void setProgram (String program) throws StudentException {
         if (program == null || program.isEmpty()) {
-            throw new StudentException("Student program can not be null");
+            throw new StudentException(Error.STUDENT_PROGRAM_NULL_VALUE.message);
         }
 
         this.program = program;
@@ -75,7 +75,7 @@ public class Student {
 
     public void setGroup (Integer group) throws StudentException {
         if (group == null || group == 0) {
-            throw new StudentException("Student group can not be null");
+            throw new StudentException(Error.STUDENT_GROUP_NULL_VALUE.message);
         }
 
         this.group = group;
