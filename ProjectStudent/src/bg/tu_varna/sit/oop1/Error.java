@@ -5,7 +5,11 @@ public enum Error {
     STUDENT_NAME_NULL_VALUE("Student name can not be null"),
     STUDENT_FN_NULL_VALUE("Student faculty number can not be null"),
     STUDENT_PROGRAM_NULL_VALUE("Student program can not be null"),
-    STUDENT_GROUP_NULL_VALUE("Student group can not be null");
+    STUDENT_GROUP_NULL_VALUE("Student group can not be null"),
+
+    //Subject exceptions:
+    SUBJECT_NAME_NULL_VALUE("Subject name can not be null"),
+    SUBJECT_TYPE_WRONG_VALUE("Subject type must be \"optional\" or \"mandatory\"");
 
     public final String message;
 
