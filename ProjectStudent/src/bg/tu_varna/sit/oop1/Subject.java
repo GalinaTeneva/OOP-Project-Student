@@ -1,8 +1,9 @@
 package bg.tu_varna.sit.oop1;
 
+import java.io.Serializable;
 import java.util.Locale;
 
-public class Subject {
+public class Subject implements Serializable {
     private String name;
     private String type;
 
@@ -19,6 +20,7 @@ public class Subject {
     {
         return  this.type;
     }
+
     //Set Methods
 
     public void setName (String name) throws SubjectException {
@@ -35,5 +37,13 @@ public class Subject {
         }
 
         this.type = type.toLowerCase();
+    }
+
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

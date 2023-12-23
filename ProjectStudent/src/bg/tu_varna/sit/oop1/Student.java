@@ -1,15 +1,21 @@
 package bg.tu_varna.sit.oop1;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
 public class Student {
     private String name;
     private int facultyNumber;
     private int course; //currCourse
-    private String program; //специалност - !create class Program and edit the student property!
+    private Program program;
     private int group;
     private StudentStatus status;
     private double averageGrade;
 
-    public Student (String name, int facultyNumber, String program, int group) throws StudentException{
+    private Map<Subject, Double> gradesBySubject;
+
+    public Student (String name, int facultyNumber, Program program, int group) throws StudentException{
         setName(name);
         setFacultyNumber(facultyNumber);
         setProgram(program);
@@ -32,7 +38,7 @@ public class Student {
         return this.course;
     }
 
-    public String getProgram () {
+    public Program getProgram () {
         return this.program;
     }
 
@@ -65,8 +71,8 @@ public class Student {
         this.facultyNumber = facultyNumber;
     }
 
-    public void setProgram (String program) throws StudentException {
-        if (program == null || program.isEmpty()) {
+    public void setProgram (Program program) throws StudentException {
+        if (program == null) {
             throw new StudentException(Error.STUDENT_PROGRAM_NULL_VALUE.message);
         }
 
@@ -81,5 +87,15 @@ public class Student {
         this.group = group;
     }
 
-    // Create setAverageGrade method!
+    private void setAverageGrade() {
+        int gradesCount = gradesBySubject.size();
+        Collection<Double> studentGrades = gradesBySubject.values();
+        int gradesSum = 0;
+
+        for(Double grade : studentGrades) {
+            gradesSum += grade;
+        }
+
+        this.averageGrade = gradesSum / gradesCount;
+    }
 }
