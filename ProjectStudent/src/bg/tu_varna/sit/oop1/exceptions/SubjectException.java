@@ -1,4 +1,4 @@
-package bg.tu_varna.sit.oop1.Exceptions;
+package bg.tu_varna.sit.oop1.exceptions;
 
 public class SubjectException extends Exception {
     public SubjectException (String message) {

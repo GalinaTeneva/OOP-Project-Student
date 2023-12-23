@@ -1,7 +1,7 @@
-package bg.tu_varna.sit.oop1.Models;
+package bg.tu_varna.sit.oop1.models;
 
 import bg.tu_varna.sit.oop1.Error;
-import bg.tu_varna.sit.oop1.Exceptions.StudentException;
+import bg.tu_varna.sit.oop1.exceptions.StudentException;
 import bg.tu_varna.sit.oop1.StudentStatus;
 
 import java.util.Collection;

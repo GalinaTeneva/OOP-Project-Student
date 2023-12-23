@@ -1,7 +1,7 @@
 package bg.tu_varna.sit.oop1;
 
-import bg.tu_varna.sit.oop1.Models.Program;
-import bg.tu_varna.sit.oop1.Models.Subject;
+import bg.tu_varna.sit.oop1.models.Program;
+import bg.tu_varna.sit.oop1.models.Subject;
 
 import java.util.*;
 
