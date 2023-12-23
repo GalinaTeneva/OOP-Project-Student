@@ -1,4 +1,7 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.Models;
+
+import bg.tu_varna.sit.oop1.Error;
+import bg.tu_varna.sit.oop1.Exceptions.ProgramException;
 
 import java.util.*;
 

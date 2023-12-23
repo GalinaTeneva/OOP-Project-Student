@@ -1,7 +1,10 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.Models;
+
+import bg.tu_varna.sit.oop1.Error;
+import bg.tu_varna.sit.oop1.Exceptions.StudentException;
+import bg.tu_varna.sit.oop1.StudentStatus;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 public class Student {
@@ -15,7 +18,7 @@ public class Student {
 
     private Map<Subject, Double> gradesBySubject;
 
-    public Student (String name, int facultyNumber, Program program, int group) throws StudentException{
+    public Student (String name, int facultyNumber, Program program, int group) throws StudentException {
         setName(name);
         setFacultyNumber(facultyNumber);
         setProgram(program);
@@ -57,7 +60,7 @@ public class Student {
     //Set methods
     public void setName (String name) throws StudentException {
         if (name == null || name.isEmpty()) {
-            throw new StudentException(Error.STUDENT_NAME_NULL_VALUE.message);
+            throw new StudentException(bg.tu_varna.sit.oop1.Error.STUDENT_NAME_NULL_VALUE.message);
         }
 
         this.name = name;
@@ -65,7 +68,7 @@ public class Student {
 
     public void setFacultyNumber (Integer facultyNumber) throws StudentException {
         if (facultyNumber == null || facultyNumber == 0) {
-            throw new StudentException(Error.STUDENT_FN_NULL_VALUE.message);
+            throw new StudentException(bg.tu_varna.sit.oop1.Error.STUDENT_FN_NULL_VALUE.message);
         }
 
         this.facultyNumber = facultyNumber;
@@ -73,7 +76,7 @@ public class Student {
 
     public void setProgram (Program program) throws StudentException {
         if (program == null) {
-            throw new StudentException(Error.STUDENT_PROGRAM_NULL_VALUE.message);
+            throw new StudentException(bg.tu_varna.sit.oop1.Error.STUDENT_PROGRAM_NULL_VALUE.message);
         }
 
         this.program = program;

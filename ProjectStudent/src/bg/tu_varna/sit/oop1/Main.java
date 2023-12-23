@@ -1,11 +1,7 @@
 package bg.tu_varna.sit.oop1;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
+import bg.tu_varna.sit.oop1.Models.Program;
+import bg.tu_varna.sit.oop1.Models.Subject;
 
 import java.util.*;
 

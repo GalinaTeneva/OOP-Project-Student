@@ -1,13 +1,15 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.Models;
+
+import bg.tu_varna.sit.oop1.Error;
+import bg.tu_varna.sit.oop1.Exceptions.SubjectException;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 public class Subject implements Serializable {
     private String name;
     private String type;
 
-    public Subject (String name, String type) throws SubjectException{
+    public Subject (String name, String type) throws SubjectException {
         setName(name);
         setType(type);
     }
