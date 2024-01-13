@@ -3,29 +3,30 @@ package bg.tu_varna.sit.oop1.models;
 import bg.tu_varna.sit.oop1.Error;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
 import bg.tu_varna.sit.oop1.StudentStatus;
+import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
-public class Student {
+public class Student /*implements Serializable*/ {
     private String name;
     private int facultyNumber;
     private int course; //currCourse
     private Program program;
     private int group;
     private StudentStatus status;
-    private double averageGrade;
+    //private double averageGrade;
 
-    private Map<Subject, Double> gradesBySubject;
+    private Map<Subject, Double> gradesBySubject = new HashMap<Subject, Double>();
 
-    public Student (String name, int facultyNumber, Program program, int group) throws StudentException {
+    public Student (String name, int facultyNumber, Program program, int course, int group) throws StudentException {
         setName(name);
         setFacultyNumber(facultyNumber);
         setProgram(program);
+        setCourse(course);
         setGroup(group);
-
-        this.course = 1;
-        this.status = StudentStatus.ENROLLED;
     }
 
     //Get methods
@@ -53,8 +54,8 @@ public class Student {
         return this.status;
     }
 
-    public double getAverageGrade () {
-        return this.averageGrade;
+    public Map<Subject, Double> getGradesBySubject() {
+        return this.gradesBySubject;
     }
 
     //Set methods
@@ -74,6 +75,14 @@ public class Student {
         this.facultyNumber = facultyNumber;
     }
 
+    public void setCourse (Integer course) throws StudentException {
+        if (course == null || course == 0) {
+            throw new StudentException(Error.STUDENT_COURSE_NULL_VALUE.message);
+        }
+
+        this.course = course;
+    }
+
     public void setProgram (Program program) throws StudentException {
         if (program == null) {
             throw new StudentException(bg.tu_varna.sit.oop1.Error.STUDENT_PROGRAM_NULL_VALUE.message);
@@ -90,15 +99,26 @@ public class Student {
         this.group = group;
     }
 
-    private void setAverageGrade() {
+    public void setStatus (StudentStatus status) throws StudentException {
+        //Write the validation!
+        this.status = status;
+    }
+
+    public void setGradesBySubject (Map<Subject, Double> gradesBySubject) {
+        //Write the validation!
+        this.gradesBySubject = gradesBySubject;
+    }
+
+    public double calculateAverageGrade() {
         int gradesCount = gradesBySubject.size();
         Collection<Double> studentGrades = gradesBySubject.values();
-        int gradesSum = 0;
+        double gradesSum = 0;
 
         for(Double grade : studentGrades) {
             gradesSum += grade;
         }
 
-        this.averageGrade = gradesSum / gradesCount;
+        return gradesSum / gradesCount;
     }
+
 }

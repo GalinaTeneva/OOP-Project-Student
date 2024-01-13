@@ -9,6 +9,10 @@ public class Subject implements Serializable {
     private String name;
     private String type;
 
+    public Subject (String name) throws SubjectException {
+        setName(name);
+    }
+
     public Subject (String name, String type) throws SubjectException {
         setName(name);
         setType(type);
