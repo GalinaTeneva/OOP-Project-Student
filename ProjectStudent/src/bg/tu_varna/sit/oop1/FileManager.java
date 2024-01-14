@@ -1,8 +1,6 @@
 package bg.tu_varna.sit.oop1;
 
-import bg.tu_varna.sit.oop1.exceptions.ProgramException;
-import bg.tu_varna.sit.oop1.exceptions.StudentException;
-import bg.tu_varna.sit.oop1.exceptions.SubjectException;
+import bg.tu_varna.sit.oop1.exceptions.DeserializationException;
 import bg.tu_varna.sit.oop1.models.Student;
 
 import java.io.*;
@@ -30,14 +28,10 @@ public class FileManager {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                Student student = studentService.deserializeStudent(line);
+                Student student = studentService.deserialize(line);
                 studentService.addStudent(student);
             }
-        } catch (StudentException e) {
-            e.printStackTrace();
-        } catch (SubjectException e) {
-            e.printStackTrace();
-        } catch (ProgramException e) {
+        } catch (DeserializationException e) {
             e.printStackTrace();
         }
     }
@@ -55,7 +49,7 @@ public class FileManager {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentFilePath))) {
             HashSet<Student> students = studentService.getStudents();
             for (Student student : students) {
-                String line = studentService.serializeStudent(student);
+                String line = studentService.serialize(student);
                 writer.write(line);
                 writer.newLine();
             }

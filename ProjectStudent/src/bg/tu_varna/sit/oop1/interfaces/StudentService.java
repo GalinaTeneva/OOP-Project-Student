@@ -1,4 +1,4 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.interfaces;
 
 public interface StudentService {
     public void enroll();

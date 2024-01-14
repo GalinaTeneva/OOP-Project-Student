@@ -18,7 +18,7 @@ public class Main {
             Student student1 = new Student("Stoyan", 1, program1, 1, 3);
             student1.setStatus(StudentStatus.valueOf("ENROLLED"));
 
-            String studentString = studentService.serializeStudent(student1);
+            String studentString = studentService.serialize(student1);
             System.out.print(studentString);
 
             String anotherStudentString = "Kamen,3,1,KST,1,ENROLLED,";

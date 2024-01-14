@@ -44,12 +44,4 @@ public class Subject implements Serializable {
 
         this.type = type.toLowerCase();
     }
-
-    @Override
-    public String toString() {
-        return "Subject{" +
-                "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                '}';
-    }
 }

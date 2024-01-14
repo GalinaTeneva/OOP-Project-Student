@@ -1,8 +1,12 @@
 package bg.tu_varna.sit.oop1;
 
+import bg.tu_varna.sit.oop1.exceptions.DeserializationException;
 import bg.tu_varna.sit.oop1.exceptions.ProgramException;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
 import bg.tu_varna.sit.oop1.exceptions.SubjectException;
+import bg.tu_varna.sit.oop1.interfaces.CustomDeserializable;
+import bg.tu_varna.sit.oop1.interfaces.CustomSerializable;
+import bg.tu_varna.sit.oop1.interfaces.StudentService;
 import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
@@ -12,7 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class StudentServiceImpl implements StudentService{
+public class StudentServiceImpl implements StudentService, CustomSerializable<Student>, CustomDeserializable<Student> {
     private HashSet<Student> students;
 
     public StudentServiceImpl(Collection<Student> students) {
@@ -95,8 +99,9 @@ public class StudentServiceImpl implements StudentService{
         this.students.add(student);
     }
 
-    // Additional methods for file serialization
-    public String serializeStudent(Student student) {
+
+    @Override
+    public String serialize(Student student) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(student.getName()).append(",");
@@ -120,38 +125,43 @@ public class StudentServiceImpl implements StudentService{
         return sb.toString();
     }
 
-    public Student deserializeStudent(String line) throws StudentException, ProgramException, SubjectException {
-        String[] parts = line.split(",");
+    @Override
+    public Student deserialize(String line) throws DeserializationException {
+        try {
+            String[] parts = line.split(",");
 
-        if (parts.length < 6) {
-            throw new StudentException("Invalid serialized student data");
-        }
-
-        String name = parts[0];
-        int facultyNumber = Integer.parseInt(parts[1]);
-        int course = Integer.parseInt(parts[2]);
-        Program program = new Program(parts[3]);
-        int group = Integer.parseInt(parts[4]);
-        StudentStatus status = StudentStatus.valueOf(parts[5]);
-        //double averageGrade = Double.parseDouble(parts[6]);
-
-        Student student = new Student(name, facultyNumber, program, course, group);
-        student.setStatus(status);
-        //student.averageGrade = averageGrade;
-
-        if (parts.length > 6) {
-            Map<Subject, Double> gradesBySubject = new HashMap<Subject, Double>();
-            String[] gradeParts = parts[7].split(";");
-            for (String gradePart : gradeParts) {
-                String[] gradeSplit = gradePart.split(":");
-                Subject subject = new Subject(gradeSplit[0]);
-                Double grade = Double.valueOf(gradeSplit[1]);
-                gradesBySubject.put(subject, grade);
+            if (parts.length < 6) {
+                throw new StudentException("Invalid serialized student data");
             }
 
-            student.setGradesBySubject(gradesBySubject);
-        }
+            String name = parts[0];
+            int facultyNumber = Integer.parseInt(parts[1]);
+            int course = Integer.parseInt(parts[2]);
+            Program program = new Program(parts[3]);
+            int group = Integer.parseInt(parts[4]);
+            StudentStatus status = StudentStatus.valueOf(parts[5]);
+            //double averageGrade = Double.parseDouble(parts[6]);
 
-        return student;
+            Student student = new Student(name, facultyNumber, program, course, group);
+            student.setStatus(status);
+            //student.averageGrade = averageGrade;
+
+            if (parts.length > 6) {
+                Map<Subject, Double> gradesBySubject = new HashMap<Subject, Double>();
+                String[] gradeParts = parts[7].split(";");
+                for (String gradePart : gradeParts) {
+                    String[] gradeSplit = gradePart.split(":");
+                    Subject subject = new Subject(gradeSplit[0]);
+                    Double grade = Double.valueOf(gradeSplit[1]);
+                    gradesBySubject.put(subject, grade);
+                }
+
+                student.setGradesBySubject(gradesBySubject);
+            }
+
+            return student;
+        } catch (StudentException | ProgramException | SubjectException e) {
+            throw new DeserializationException("Error deserializing data", e);
+        }
     }
 }
