@@ -31,9 +31,9 @@ public class Main {
             program1Course1Sbjs.add(subject3);
 
             HashSet<Subject> program1Course2Sbjs = new HashSet<Subject>();
-            program1Course1Sbjs.add(subject4);
-            program1Course1Sbjs.add(subject5);
-            program1Course1Sbjs.add(subject6);
+            program1Course2Sbjs.add(subject4);
+            program1Course2Sbjs.add(subject5);
+            program1Course2Sbjs.add(subject6);
 
             program1.setSubjectsByCourse(1, program1Course1Sbjs);
             program1.setSubjectsByCourse(2, program1Course2Sbjs);
@@ -52,6 +52,10 @@ public class Main {
                 String programString = programService.serialize(program);
                 System.out.println(programString);
             }
+
+            //Program program = programService.deserialize("Program1: 1 -> Subject3-mandatory|Subject2-optional|OOP-mandatory; 2 -> Subject5-mandatory|Subject4-optional|Subject6-optional");
+            programService.deserialize("Program3");
+            System.out.println("End");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
