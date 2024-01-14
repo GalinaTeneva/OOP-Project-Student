@@ -9,22 +9,53 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        HashSet<Program> programs = new HashSet<>();
+        ProgramServices programService = new ProgramServices(programs);
+
         try {
-            Collection<Student> students = new HashSet<>();
-            StudentServiceImpl studentService = new StudentServiceImpl(students);
+            Subject subject1 = new Subject("OOP", "maNdatory");
+            Subject subject2 = new Subject("Subject2", "optional");
+            Subject subject3 = new Subject("Subject3", "maNdatory");
+            Subject subject4 = new Subject("Subject4", "optional");
+            Subject subject5 = new Subject("Subject5", "mandatory");
+            Subject subject6 = new Subject("Subject6", "optional");
+            Subject subject7 = new Subject("Subject7", "maNdatory");
 
-            Program program1 = new Program("SIT");
+            Program program1 = new Program("Program1");
+            Program program2 = new Program("Program2");
+            Program program3 = new Program("Program3");
 
-            Student student1 = new Student("Stoyan", 1, program1, 1, 3);
-            student1.setStatus(StudentStatus.valueOf("ENROLLED"));
+            HashSet<Subject> program1Course1Sbjs = new HashSet<Subject>();
+            program1Course1Sbjs.add(subject1);
+            program1Course1Sbjs.add(subject2);
+            program1Course1Sbjs.add(subject3);
 
-            String studentString = studentService.serialize(student1);
-            System.out.print(studentString);
+            HashSet<Subject> program1Course2Sbjs = new HashSet<Subject>();
+            program1Course1Sbjs.add(subject4);
+            program1Course1Sbjs.add(subject5);
+            program1Course1Sbjs.add(subject6);
 
-            String anotherStudentString = "Kamen,3,1,KST,1,ENROLLED,";
+            program1.setSubjectsByCourse(1, program1Course1Sbjs);
+            program1.setSubjectsByCourse(2, program1Course2Sbjs);
+
+            HashSet<Subject> program2Course2Sbjs = new HashSet<Subject>();
+            program2Course2Sbjs.add(subject1);
+            program2Course2Sbjs.add(subject2);
+            program2Course2Sbjs.add(subject3);
+            program2.setSubjectsByCourse(2, program2Course2Sbjs);
+
+            programs.add(program1);
+            programs.add(program2);
+            programs.add(program3);
+
+            for (Program program : programs) {
+                String programString = programService.serialize(program);
+                System.out.println(programString);
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
     }
 
 }

@@ -11,16 +11,13 @@ import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class StudentServiceImpl implements StudentService, CustomSerializable<Student>, CustomDeserializable<Student> {
-    private HashSet<Student> students;
+    private HashSet<Student> students = new HashSet<Student>();
 
-    public StudentServiceImpl(Collection<Student> students) {
-        this.students = new HashSet<Student>(students);
+    public StudentServiceImpl(HashSet<Student> students) {
+        setStudents(students);
     }
 
     public HashSet<Student> getStudents() {
@@ -29,7 +26,7 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
 
     public void setStudents(HashSet<Student> students) {
         this.students = students;
-    }
+    } //Consider using validation
 
     @Override
     public void enroll() {
@@ -109,10 +106,12 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
         sb.append(student.getCourse()).append(",");
         sb.append(student.getProgram() != null ? student.getProgram().getName() : "null").append(",");
         sb.append(student.getGroup()).append(",");
-        sb.append(student.getStatus() != null ? student.getStatus().toString() : "null").append(",");
+        sb.append(student.getStatus() != null ? student.getStatus().toString() : "null");
 
         if (student.getGradesBySubject() != null && !student.getGradesBySubject().isEmpty()) {
+            sb.append(",");
             StringBuilder gradesStringBuilder = new StringBuilder();
+
             for (Map.Entry<Subject, Double> entry : student.getGradesBySubject().entrySet()) {
                 if (gradesStringBuilder.length() > 0) {
                     gradesStringBuilder.append(";");
