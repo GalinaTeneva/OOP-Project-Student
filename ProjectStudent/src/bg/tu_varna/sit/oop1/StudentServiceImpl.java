@@ -101,25 +101,27 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
     public String serialize(Student student) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(student.getName()).append(",");
-        sb.append(student.getFacultyNumber()).append(",");
-        sb.append(student.getCourse()).append(",");
-        sb.append(student.getProgram() != null ? student.getProgram().getName() : "null").append(",");
-        sb.append(student.getGroup()).append(",");
-        sb.append(student.getStatus() != null ? student.getStatus().toString() : "null");
+        sb.append(student.getName()).append(", ");
+        sb.append(student.getFacultyNumber()).append(", ");
+        sb.append(student.getCourse()).append(", ");
+        sb.append(student.getProgram() != null ? student.getProgram().getName() : "null").append(", ");
+        sb.append(student.getGroup()).append(", ");
+        sb.append(student.getStatus().toString());
 
         if (student.getGradesBySubject() != null && !student.getGradesBySubject().isEmpty()) {
-            sb.append(",");
+            sb.append(", ");
             StringBuilder gradesStringBuilder = new StringBuilder();
 
             for (Map.Entry<Subject, Double> entry : student.getGradesBySubject().entrySet()) {
                 if (gradesStringBuilder.length() > 0) {
-                    gradesStringBuilder.append(";");
+                    gradesStringBuilder.append("; ");
                 }
-                gradesStringBuilder.append(entry.getKey().toString()).append(":").append(entry.getValue());
+                gradesStringBuilder.append(entry.getKey().getName()).append(" -> ").append(entry.getValue());
             }
-            sb.append(",").append(gradesStringBuilder.toString());
+            sb.append(gradesStringBuilder);
         }
+
+        //Append average grade if there are subjects with grades!!
 
         return sb.toString();
     }
@@ -127,7 +129,7 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
     @Override
     public Student deserialize(String line) throws DeserializationException {
         try {
-            String[] parts = line.split(",");
+            String[] parts = line.split(", ");
 
             if (parts.length < 6) {
                 throw new StudentException("Invalid serialized student data");
@@ -138,18 +140,16 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
             int course = Integer.parseInt(parts[2]);
             Program program = new Program(parts[3]);
             int group = Integer.parseInt(parts[4]);
-            StudentStatus status = StudentStatus.valueOf(parts[5]);
-            //double averageGrade = Double.parseDouble(parts[6]);
+            String status = parts[5];
 
             Student student = new Student(name, facultyNumber, program, course, group);
             student.setStatus(status);
-            //student.averageGrade = averageGrade;
 
             if (parts.length > 6) {
                 Map<Subject, Double> gradesBySubject = new HashMap<Subject, Double>();
-                String[] gradeParts = parts[7].split(";");
+                String[] gradeParts = parts[6].split("; ");
                 for (String gradePart : gradeParts) {
-                    String[] gradeSplit = gradePart.split(":");
+                    String[] gradeSplit = gradePart.split(" -> ");
                     Subject subject = new Subject(gradeSplit[0]);
                     Double grade = Double.valueOf(gradeSplit[1]);
                     gradesBySubject.put(subject, grade);
@@ -157,6 +157,10 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
 
                 student.setGradesBySubject(gradesBySubject);
             }
+
+            //If there sre subjects with grades:
+            //double averageGrade = Double.parseDouble(parts[7]);
+            //student.averageGrade = averageGrade;
 
             return student;
         } catch (StudentException | ProgramException | SubjectException e) {

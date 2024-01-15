@@ -8,6 +8,7 @@ import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Student /*implements Serializable*/ {
@@ -99,9 +100,12 @@ public class Student /*implements Serializable*/ {
         this.group = group;
     }
 
-    public void setStatus (StudentStatus status) throws StudentException {
-        //Write the validation!
-        this.status = status;
+    public void setStatus (String statusString) throws StudentException {
+        if (!statusString.equalsIgnoreCase("enrolled") && !statusString.equalsIgnoreCase("dropped") && !statusString.equalsIgnoreCase("graduated")) {
+            throw new StudentException("Wrong status type");
+        }
+
+        this.status = StudentStatus.valueOf(statusString.toUpperCase());
     }
 
     public void setGradesBySubject (Map<Subject, Double> gradesBySubject) {
