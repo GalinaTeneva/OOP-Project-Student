@@ -1,7 +1,10 @@
 package bg.tu_varna.sit.oop1.interfaces;
 
+import bg.tu_varna.sit.oop1.exceptions.ProgramException;
+import bg.tu_varna.sit.oop1.exceptions.StudentException;
+
 public interface StudentService {
-    public void enroll(int facultyNumber, String programName, int group, String studentName);
+    public void enroll(String[] commandParts) throws ProgramException, StudentException;
     public void advance(int facultyNumber);
     public void change(int facultyNumber, String option, String value);
     public void graduate(int facultyNumber);

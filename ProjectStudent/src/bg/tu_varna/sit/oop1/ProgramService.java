@@ -6,6 +6,7 @@ import bg.tu_varna.sit.oop1.interfaces.CustomDeserializable;
 import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Subject;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 public class ProgramService implements CustomDeserializable<Program> {
@@ -13,6 +14,10 @@ public class ProgramService implements CustomDeserializable<Program> {
 
     public ProgramService() {
         this.programs = new HashSet<>();
+    }
+
+    public Collection<Program> getPrograms() {
+        return this.programs;
     }
 
     @Override

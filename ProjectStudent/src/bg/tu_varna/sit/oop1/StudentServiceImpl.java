@@ -17,12 +17,24 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
     private HashSet<Student> students;
 
     public StudentServiceImpl() {
-        students = new HashSet<>();
+        this.students = new HashSet<>();
+    }
+
+    public Collection<Student> getStudents() {
+        return this.students;
     }
 
     @Override
-    public void enroll(int facultyNumber, String programName, int group, String studentName) {
+    public void enroll (String[] commandParts) throws ProgramException, StudentException {
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        Program program = new Program(commandParts[2]);
+        int group = Integer.parseInt(commandParts[3]);
+        String studentName = commandParts[4];
+        int year = 1;
 
+        Student newStudent = new Student(studentName, facultyNumber, program, year, group);
+        newStudent.setStatus("enrolled");
+        students.add(newStudent);
     }
 
     @Override
