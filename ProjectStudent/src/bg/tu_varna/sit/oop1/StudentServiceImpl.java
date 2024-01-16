@@ -14,7 +14,7 @@ import bg.tu_varna.sit.oop1.models.Subject;
 import java.util.*;
 
 public class StudentServiceImpl implements StudentService, CustomSerializable<Student>, CustomDeserializable<Student> {
-    private HashSet<Student> students = new HashSet<Student>();
+    private HashSet<Student> students = new HashSet<>();
 
     public StudentServiceImpl(HashSet<Student> students) {
         setStudents(students);
@@ -30,62 +30,62 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
     } //Consider using validation
 
     @Override
-    public void enroll() {
+    public void enroll(int facultyNumber, String programName, int group, String studentName) {
 
     }
 
     @Override
-    public void advance() {
+    public void advance(int facultyNumber) {
 
     }
 
     @Override
-    public void change() {
+    public void change(int facultyNumber, String option, String value) {
 
     }
 
     @Override
-    public void graduate() {
+    public void graduate(int facultyNumber) {
 
     }
 
     @Override
-    public void interrupt() {
+    public void interrupt(int facultyNumber) {
 
     }
 
     @Override
-    public void resume() {
+    public void resume(int facultyNumber) {
 
     }
 
     @Override
-    public void print() {
+    public void print(int facultyNumber) {
 
     }
 
     @Override
-    public void printAll() {
+    public void printAll(String programName, int year) {
 
     }
 
     @Override
-    public void enrollIn() {
+    public void enrollIn(int facultyNumber, String subjectName) {
 
     }
 
     @Override
-    public void addGrade() {
+    public void addGrade(int facultyNumber, String subjectName, double grade) {
 
     }
 
     @Override
-    public void protocol() {
+    public void protocol(String subjectName) {
 
     }
 
     @Override
-    public void report() {
+    public void report(int facultyNumber) {
 
     }
 
@@ -96,7 +96,7 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
         sb.append(student.getName()).append(" | ");
         sb.append(student.getFacultyNumber()).append(" | ");
         sb.append(student.getProgram() != null ? student.getProgram().getName() : "null").append(" | ");
-        sb.append(student.getCourse()).append(" | ");
+        sb.append(student.getYear()).append(" | ");
         sb.append(student.getGroup()).append(" | ");
         sb.append(student.getStatus().toString());
 
@@ -122,17 +122,17 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
             String[] parts = line.split(" | ");
 
             if (parts.length < 6) {
-                throw new StudentException("Invalid serialized student data");
+                throw new DeserializationException("Invalid serialized student data");
             }
 
             String name = parts[0];
             int facultyNumber = Integer.parseInt(parts[1]);
             Program program = new Program(parts[2]);
-            int course = Integer.parseInt(parts[3]);
+            int year = Integer.parseInt(parts[3]);
             int group = Integer.parseInt(parts[4]);
             String status = parts[5];
 
-            Student student = new Student(name, facultyNumber, program, course, group);
+            Student student = new Student(name, facultyNumber, program, year, group);
             student.setStatus(status);
 
             if (parts.length > 6) {

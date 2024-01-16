@@ -3,7 +3,6 @@ package bg.tu_varna.sit.oop1.models;
 import bg.tu_varna.sit.oop1.Error;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
 import bg.tu_varna.sit.oop1.StudentStatus;
-import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,7 +11,7 @@ import java.util.Map;
 public class Student {
     private String name;
     private int facultyNumber;
-    private int course; //currCourse
+    private int year; //currCourse
     private Program program;
     private int group;
     private StudentStatus status;
@@ -20,11 +19,11 @@ public class Student {
 
     private Map<Subject, Double> gradesBySubject = new HashMap<>();
 
-    public Student (String name, int facultyNumber, Program program, int course, int group) throws StudentException {
+    public Student (String name, int facultyNumber, Program program, int year, int group) throws StudentException {
         setName(name);
         setFacultyNumber(facultyNumber);
         setProgram(program);
-        setCourse(course);
+        setYear(year);
         setGroup(group);
     }
 
@@ -55,16 +54,16 @@ public class Student {
     }
 
     //Course get and set methods
-    public int getCourse () {
-        return this.course;
+    public int getYear() {
+        return this.year;
     }
 
-    public void setCourse (Integer course) throws StudentException {
-        if (course == null || course == 0) {
+    public void setYear(Integer year) throws StudentException {
+        if (year == null || year == 0) {
             throw new StudentException(Error.STUDENT_COURSE_NULL_VALUE.message);
         }
 
-        this.course = course;
+        this.year = year;
     }
 
     //Program get and set methods
