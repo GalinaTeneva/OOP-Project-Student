@@ -74,15 +74,20 @@ public class Main {
             student1.setStatus("ENrolled");
             student2.setStatus("enrolled");
 
+            student1.setAverageGrade();
+            student2.setAverageGrade();
+
             String student1Data = studentService.serialize(student1);
             String student2Data = studentService.serialize(student2);
 
             System.out.println(student1Data);
+            System.out.println(student1.getAverageGrade());
             System.out.println(student2Data);
+            System.out.println(student2.getAverageGrade());
 
-            studentServicesManager.saveAs("D:\\UserData\\Desktop\\test.txt");
+            /*studentServicesManager.saveAs("D:\\UserData\\Desktop\\test.txt");
             System.out.println("The data read from the file is:");
-            studentServicesManager.open("D:\\UserData\\Desktop\\test.txt");
+            studentServicesManager.open("D:\\UserData\\Desktop\\test.txt");*/
 
             System.out.println("End");
         } catch (Exception e) {

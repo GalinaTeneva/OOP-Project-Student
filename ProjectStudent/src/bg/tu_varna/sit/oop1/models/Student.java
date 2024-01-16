@@ -16,9 +16,9 @@ public class Student {
     private Program program;
     private int group;
     private StudentStatus status;
-    //private double averageGrade;
+    private String averageGrade;
 
-    private Map<Subject, Double> gradesBySubject = new HashMap<Subject, Double>();
+    private Map<Subject, Double> gradesBySubject = new HashMap<>();
 
     public Student (String name, int facultyNumber, Program program, int course, int group) throws StudentException {
         setName(name);
@@ -106,6 +106,16 @@ public class Student {
         this.status = StudentStatus.valueOf(statusString.toUpperCase());
     }
 
+    //AverageGrade get and set method
+    public String getAverageGrade () {
+        return this.averageGrade;
+    }
+
+    public void setAverageGrade () {
+        double averageGradeAsNum = calculateAverageGrade();
+        this.averageGrade = String.format("%.2f", averageGradeAsNum);
+    }
+
     //GradesBySubject status get and set methods
     public Map<Subject, Double> getGradesBySubject() {
         return this.gradesBySubject;
@@ -117,7 +127,7 @@ public class Student {
     }
 
     //Method for calculating Average grade
-    public double calculateAverageGrade() {
+    private double calculateAverageGrade() {
         int gradesCount = gradesBySubject.size();
         Collection<Double> studentGrades = gradesBySubject.values();
         double gradesSum = 0;
@@ -128,5 +138,4 @@ public class Student {
 
         return gradesSum / gradesCount;
     }
-
 }
