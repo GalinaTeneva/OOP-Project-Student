@@ -12,8 +12,8 @@ public class Main {
     public static void main(String[] args) {
         HashSet<Program> programs = new HashSet<>();
         HashSet<Student> students = new HashSet<>();
-        CustomDeserializable programService = new ProgramService(programs);
-        StudentServiceImpl studentService = new StudentServiceImpl(students);
+        CustomDeserializable programService = new ProgramService();
+        StudentServiceImpl studentService = new StudentServiceImpl();
 
         FileManager programServicesManager = new FileManager(programService, programs);
         FileManager studentServicesManager = new FileManager(studentService, studentService, students);
@@ -52,11 +52,11 @@ public class Main {
             programs.add(program1);
             programs.add(program2);
 
-            //String program1Data = programService.serialize(program1);
-            //String program2Data = programService.serialize(program2);
-            //System.out.println(program1Data);
-            //System.out.println(program2Data);
-            //programServicesManager.open("D:\\UserData\\Desktop\\ProgramsData.txt");
+            /*String program1Data = programService.serialize(program1);
+            String program2Data = programService.serialize(program2);
+            System.out.println(program1Data);
+            System.out.println(program2Data);*/
+            programServicesManager.open("D:\\UserData\\Desktop\\ProgramsData.txt");
 
             Student student1 = new Student("Vasil", 1213, program1, 2, 2);
             Student student2 = new Student("Kamen", 1415, program2, 1, 3);
@@ -85,9 +85,9 @@ public class Main {
             System.out.println(student2Data);
             System.out.println(student2.getAverageGrade());
 
-            /*studentServicesManager.saveAs("D:\\UserData\\Desktop\\test.txt");
+            studentServicesManager.saveAs("D:\\UserData\\Desktop\\test.txt");
             System.out.println("The data read from the file is:");
-            studentServicesManager.open("D:\\UserData\\Desktop\\test.txt");*/
+            studentServicesManager.open("D:\\UserData\\Desktop\\test.txt");
 
             System.out.println("End");
         } catch (Exception e) {

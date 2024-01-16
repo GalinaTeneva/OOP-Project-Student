@@ -14,20 +14,11 @@ import bg.tu_varna.sit.oop1.models.Subject;
 import java.util.*;
 
 public class StudentServiceImpl implements StudentService, CustomSerializable<Student>, CustomDeserializable<Student> {
-    private HashSet<Student> students = new HashSet<>();
+    private HashSet<Student> students;
 
-    public StudentServiceImpl(HashSet<Student> students) {
-        setStudents(students);
+    public StudentServiceImpl() {
+        students = new HashSet<>();
     }
-
-    //Name get and set methods
-    public HashSet<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(HashSet<Student> students) {
-        this.students = students;
-    } //Consider using validation
 
     @Override
     public void enroll(int facultyNumber, String programName, int group, String studentName) {
@@ -119,7 +110,7 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
     @Override
     public Student deserialize(String line) throws DeserializationException {
         try {
-            String[] parts = line.split(" | ");
+            String[] parts = line.split(" \\| ");
 
             if (parts.length < 6) {
                 throw new DeserializationException("Invalid serialized student data");
