@@ -18,16 +18,10 @@ public class Subject implements Serializable {
         setType(type);
     }
 
-    //Get methods
-
-    public String getName() { return this.name; }
-
-    public String getType ()
-    {
-        return  this.type;
+    //Name get and set methods
+    public String getName() {
+        return this.name;
     }
-
-    //Set Methods
 
     public void setName (String name) throws SubjectException {
         if (name == null || name.isEmpty()) {
@@ -35,6 +29,11 @@ public class Subject implements Serializable {
         }
 
         this.name = name;
+    }
+
+    //Type get and set methods
+    public String getType () {
+        return  this.type;
     }
 
     public void setType (String type) throws SubjectException {

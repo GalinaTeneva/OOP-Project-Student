@@ -5,18 +5,16 @@ import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 import bg.tu_varna.sit.oop1.interfaces.CustomDeserializable;
 import bg.tu_varna.sit.oop1.interfaces.CustomSerializable;
 import bg.tu_varna.sit.oop1.models.Program;
-import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-public class ProgramServices implements CustomSerializable<Program>, CustomDeserializable<Program> {
+public class ProgramService implements CustomSerializable<Program>, CustomDeserializable<Program> {
     private HashSet<Program> programs;
 
-    public ProgramServices (HashSet<Program> programs) {
+    public ProgramService(HashSet<Program> programs) {
         setPrograms(programs);
     }
 
@@ -47,16 +45,16 @@ public class ProgramServices implements CustomSerializable<Program>, CustomDeser
                 StringBuilder subjectsStringBuilder = new StringBuilder();
                 for (Subject subject : entry.getValue()) {
                     if (subjectsStringBuilder.length() > 0) {
-                        subjectsStringBuilder.append("|"); // Separator between different subjects in the same course
+                        subjectsStringBuilder.append(" | "); // Separator between different subjects in the same course
                     }
-                    subjectsStringBuilder.append(subject.getName()).append("-");
+                    subjectsStringBuilder.append(subject.getName()).append(" - ");
                     subjectsStringBuilder.append(subject.getType());
                 }
 
                 coursesStringBuilder.append(subjectsStringBuilder);
             }
 
-            sb.append(coursesStringBuilder.toString());
+            sb.append(coursesStringBuilder);
         }
 
         return sb.toString();
@@ -82,7 +80,7 @@ public class ProgramServices implements CustomSerializable<Program>, CustomDeser
                 }
 
                 Integer courseNumber = Integer.parseInt(courseSplit[0]);
-                String[] subjectParts = courseSplit[1].split("\\|");
+                String[] subjectParts = courseSplit[1].split(" \\| ");
 
                 HashSet<Subject> subjects = new HashSet<>();
                 for (String subjectStr : subjectParts) {
@@ -100,7 +98,7 @@ public class ProgramServices implements CustomSerializable<Program>, CustomDeser
     }
 
     private Subject getSubjectFromString(String subjectStr) throws SubjectException {
-        String[] subjectInfo = subjectStr.split("-");
+        String[] subjectInfo = subjectStr.split(" - ");
         String subjectName = subjectInfo[0];
         String subjectType = subjectInfo[1];
         return new Subject(subjectName, subjectType);

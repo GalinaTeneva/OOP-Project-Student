@@ -10,20 +10,14 @@ public class Program {
     private String name;
     private Map<Integer, Collection<Subject>> subjectsByCourse = new HashMap<>();
 
-    public Program (String name)throws ProgramException {
+    public Program (String name) throws ProgramException {
         setName(name);
     }
 
-    //Get methods
-
-    public String getName() { return this.name; }
-
-    public Map<Integer, Collection<Subject>> getSubjectsByCourse ()
-    {
-        return this.subjectsByCourse;
+    //Name get and set methods
+    public String getName() {
+        return this.name;
     }
-
-    //Set methods
 
     public void setName(String name) throws ProgramException {
         if(name == null || name.isEmpty()) {
@@ -31,6 +25,12 @@ public class Program {
         }
 
         this.name = name;
+    }
+
+    //SubjectsByCourse get and set methods
+    public Map<Integer, Collection<Subject>> getSubjectsByCourse ()
+    {
+        return this.subjectsByCourse;
     }
 
     public void setSubjectsByCourse (Integer course, Collection<Subject> courseSubjects) throws ProgramException {

@@ -1,44 +1,49 @@
 package bg.tu_varna.sit.oop1;
 
 import bg.tu_varna.sit.oop1.exceptions.DeserializationException;
-import bg.tu_varna.sit.oop1.models.Student;
+import bg.tu_varna.sit.oop1.interfaces.CustomDeserializable;
+import bg.tu_varna.sit.oop1.interfaces.CustomSerializable;
 
 import java.io.*;
 import java.util.*;
 
-public class FileManager {
+public class FileManager<T> {
     private String currentFilePath;
-    private StudentServiceImpl studentService;
+    private CustomSerializable<T> serializableService;
+    private CustomDeserializable<T> deserializableService;
+    private Collection<T> objectCollection;
 
-    public FileManager(StudentServiceImpl studentService) {
-        this.studentService = studentService;
+    public FileManager(CustomDeserializable<T> deserializableService, Collection<T> objectCollection) {
+        this(null, deserializableService, objectCollection);
     }
 
+    public FileManager(CustomSerializable<T> serializableService, CustomDeserializable<T> deserializableService, Collection<T> objectCollection) {
+        this.serializableService = serializableService;
+        this.deserializableService = deserializableService;
+        this.objectCollection = objectCollection;
+    }
 
-    public void open(String filePath) throws IOException{
+    public void open (String filePath) throws IOException, DeserializationException {
         this.currentFilePath = filePath;
         File file = new File(filePath);
 
-        // If the file doesn't exist, create a new file
         if (!file.exists()) {
             file.createNewFile();
-            return;
+            return; // New file created, nothing to load.
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                Student student = studentService.deserialize(line);
-                studentService.addStudent(student);
+                T object = deserializableService.deserialize(line);
+                objectCollection.add(object);
             }
-        } catch (DeserializationException e) {
-            e.printStackTrace();
         }
     }
 
     public void close() {
         this.currentFilePath = null;
-        studentService.clearStudents();
+        objectCollection.clear();
     }
 
     public void save() throws IOException {
@@ -47,9 +52,8 @@ public class FileManager {
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentFilePath))) {
-            HashSet<Student> students = studentService.getStudents();
-            for (Student student : students) {
-                String line = studentService.serialize(student);
+            for (T object : objectCollection) {
+                String line = serializableService.serialize(object);
                 writer.write(line);
                 writer.newLine();
             }

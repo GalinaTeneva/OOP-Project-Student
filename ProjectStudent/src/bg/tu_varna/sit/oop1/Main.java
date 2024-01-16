@@ -1,6 +1,6 @@
 package bg.tu_varna.sit.oop1;
 
-import bg.tu_varna.sit.oop1.interfaces.StudentService;
+import bg.tu_varna.sit.oop1.interfaces.CustomDeserializable;
 import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
@@ -12,10 +12,11 @@ public class Main {
     public static void main(String[] args) {
         HashSet<Program> programs = new HashSet<>();
         HashSet<Student> students = new HashSet<>();
-        ProgramServices programService = new ProgramServices(programs);
+        CustomDeserializable programService = new ProgramService(programs);
         StudentServiceImpl studentService = new StudentServiceImpl(students);
 
-        FileManager fileManager = new FileManager(studentService);
+        FileManager programServicesManager = new FileManager(programService, programs);
+        FileManager studentServicesManager = new FileManager(studentService, studentService, students);
 
         try {
             Subject subject1 = new Subject("OOP", "maNdatory");
@@ -51,6 +52,12 @@ public class Main {
             programs.add(program1);
             programs.add(program2);
 
+            //String program1Data = programService.serialize(program1);
+            //String program2Data = programService.serialize(program2);
+            //System.out.println(program1Data);
+            //System.out.println(program2Data);
+            //programServicesManager.open("D:\\UserData\\Desktop\\ProgramsData.txt");
+
             Student student1 = new Student("Vasil", 1213, program1, 2, 2);
             Student student2 = new Student("Kamen", 1415, program2, 1, 3);
 
@@ -73,9 +80,10 @@ public class Main {
             System.out.println(student1Data);
             System.out.println(student2Data);
 
-            fileManager.saveAs("D:\\UserData\\Desktop\\test.txt");
+            studentServicesManager.saveAs("D:\\UserData\\Desktop\\test.txt");
             System.out.println("The data read from the file is:");
-            fileManager.open("D:\\UserData\\Desktop\\test.txt");
+            studentServicesManager.open("D:\\UserData\\Desktop\\test.txt");
+
             System.out.println("End");
         } catch (Exception e) {
             System.out.println(e.getMessage());
