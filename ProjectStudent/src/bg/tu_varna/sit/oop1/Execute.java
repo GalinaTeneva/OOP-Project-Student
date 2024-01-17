@@ -13,7 +13,7 @@ public class Execute {
 
     private StudentSerializer studentSerializer;
     private StudentDeserializer studentDeserializer;
-    private StudentServiceImpl studentService;
+    private StudentService studentService;
     private ProgramService programService;
     private FileManager programsFileManager;
     private FileManager studentsFileManager;
@@ -21,7 +21,9 @@ public class Execute {
     private Collection<Program> programs;
 
     public Execute() {
-        this.studentService = new StudentServiceImpl();
+        this.studentSerializer = new StudentSerializer();
+        this.studentDeserializer = new StudentDeserializer();
+        this.studentService = new StudentService();
         this.programService = new ProgramService();
         this.students = studentService.getStudents();
         this.programs = programService.getPrograms();
