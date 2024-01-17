@@ -65,7 +65,7 @@ public class StudentService implements Reportable {
     }
 
     public void change(String[] commandParts) {
-        
+
     }
 
     public void graduate(int facultyNumber) {

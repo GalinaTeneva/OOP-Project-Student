@@ -14,8 +14,8 @@ public class Execute {
     private StudentSerializer studentSerializer;
     private StudentDeserializer studentDeserializer;
     private StudentService studentService;
-    private ProgramService programService;
-    private FileManager programsFileManager;
+    private ProgramDeserializer programService;
+    //private FileManager programsFileManager;
     private FileManager studentsFileManager;
     private Collection<Student> students;
     private Collection<Program> programs;
@@ -24,11 +24,11 @@ public class Execute {
         this.studentSerializer = new StudentSerializer();
         this.studentDeserializer = new StudentDeserializer();
         this.studentService = new StudentService();
-        this.programService = new ProgramService();
+        this.programService = new ProgramDeserializer();
         this.students = studentService.getStudents();
-        this.programs = programService.getPrograms();
+        //this.programs = programService.getPrograms();
         this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, students);
-        this.programsFileManager = new FileManager(programService, programs);
+        //this.programsFileManager = new FileManager(programService, programs);
     }
 
     public void runProject() {

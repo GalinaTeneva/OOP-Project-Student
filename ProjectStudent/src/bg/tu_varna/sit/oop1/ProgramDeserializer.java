@@ -9,10 +9,10 @@ import bg.tu_varna.sit.oop1.models.Subject;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class ProgramService implements CustomDeserializable<Program> {
+public class ProgramDeserializer implements CustomDeserializable<Program> {
     private HashSet<Program> programs;
 
-    public ProgramService() {
+    public ProgramDeserializer() {
         this.programs = new HashSet<>();
     }
 
