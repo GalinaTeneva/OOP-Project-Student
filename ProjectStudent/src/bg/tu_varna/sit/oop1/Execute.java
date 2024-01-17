@@ -24,7 +24,7 @@ public class Execute {
         this.studentSerializer = new StudentSerializer();
         this.studentDeserializer = new StudentDeserializer();
         this.studentService = new StudentService();
-        this.programService = new ProgramDeserializer();
+        //this.programService = new ProgramDeserializer();
         this.students = studentService.getStudents();
         //this.programs = programService.getPrograms();
         this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, students);
@@ -64,6 +64,9 @@ public class Execute {
                         break;
                     case "advance":
                         studentService.advance(commandParts);
+                        break;
+                    case "change":
+                        studentService.change(commandParts);
                         break;
                     default:
                         System.out.println("Unknown command");
