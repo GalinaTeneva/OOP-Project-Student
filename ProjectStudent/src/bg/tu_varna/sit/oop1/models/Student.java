@@ -59,8 +59,8 @@ public class Student {
     }
 
     public void setYear(Integer year) throws StudentException {
-        if (year == null || year == 0) {
-            throw new StudentException(Error.STUDENT_COURSE_NULL_VALUE.message);
+        if (year == null || year == 0 || year > 4) {
+            throw new StudentException(Error.STUDENT_YEAR_WRONG_VALUE.message);
         }
 
         this.year = year;

@@ -39,6 +39,7 @@ public class Execute {
 
             try {
                 switch (command.toLowerCase()) {
+                    //general commands
                     case "open":
                         studentsFileManager.open(commandParts[1]);
                         break;
@@ -53,10 +54,13 @@ public class Execute {
                         break;
                     case "exit":
                         return;
+                    //StudentServiceCommands
                     case "enroll":
                         studentService.enroll(commandParts);
                         break;
-                    // Други команди
+                    case "advance":
+                        studentService.advance(commandParts);
+                        break;
                     default:
                         System.out.println("Unknown command");
                         break;

@@ -38,8 +38,16 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
     }
 
     @Override
-    public void advance(int facultyNumber) {
+    public void advance(String[] commandParts) throws StudentException {
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        Student student = students.stream()
+                .filter(std -> std.getFacultyNumber() == facultyNumber)
+                .findFirst().orElse(null);
+        if(student == null) {
+            throw new StudentException("The student already exists!");
+        }
 
+        student.setYear(student.getYear() + 1);
     }
 
     @Override
@@ -156,4 +164,5 @@ public class StudentServiceImpl implements StudentService, CustomSerializable<St
             throw new DeserializationException("Error deserializing data", e);
         }
     }
+
 }

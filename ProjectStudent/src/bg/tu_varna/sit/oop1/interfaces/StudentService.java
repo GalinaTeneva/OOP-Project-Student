@@ -5,7 +5,7 @@ import bg.tu_varna.sit.oop1.exceptions.StudentException;
 
 public interface StudentService {
     public void enroll(String[] commandParts) throws ProgramException, StudentException;
-    public void advance(int facultyNumber);
+    public void advance(String[] commandParts) throws StudentException;
     public void change(int facultyNumber, String option, String value);
     public void graduate(int facultyNumber);
     public void interrupt(int facultyNumber);
