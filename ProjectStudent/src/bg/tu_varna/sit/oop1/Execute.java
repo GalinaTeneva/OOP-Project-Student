@@ -11,6 +11,8 @@ public class Execute {
 
     //Add method help!
 
+    private StudentSerializer studentSerializer;
+    private StudentDeserializer studentDeserializer;
     private StudentServiceImpl studentService;
     private ProgramService programService;
     private FileManager programsFileManager;
@@ -23,7 +25,7 @@ public class Execute {
         this.programService = new ProgramService();
         this.students = studentService.getStudents();
         this.programs = programService.getPrograms();
-        this.studentsFileManager = new FileManager(studentService, studentService, students);
+        this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, students);
         this.programsFileManager = new FileManager(programService, programs);
     }
 
