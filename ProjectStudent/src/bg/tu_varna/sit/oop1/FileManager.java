@@ -1,6 +1,9 @@
 package bg.tu_varna.sit.oop1;
 
 import bg.tu_varna.sit.oop1.exceptions.DeserializationException;
+import bg.tu_varna.sit.oop1.exceptions.ProgramException;
+import bg.tu_varna.sit.oop1.exceptions.StudentException;
+import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 import bg.tu_varna.sit.oop1.interfaces.CustomDeserializable;
 import bg.tu_varna.sit.oop1.interfaces.CustomSerializable;
 
@@ -23,6 +26,10 @@ public class FileManager<T> {
         this.objectCollection = objectCollection;
     }
 
+    public Collection<T> getObjectCollection() {
+        return this.objectCollection;
+    }
+
     public void open (String filePath) throws IOException, DeserializationException {
         this.currentFilePath = filePath;
         File file = new File(filePath);
@@ -38,6 +45,12 @@ public class FileManager<T> {
                 T object = deserializableService.deserialize(line);
                 objectCollection.add(object);
             }
+        } catch (StudentException e) {
+            e.printStackTrace();
+        } catch (SubjectException e) {
+            e.printStackTrace();
+        } catch (ProgramException e) {
+            e.printStackTrace();
         }
     }
 

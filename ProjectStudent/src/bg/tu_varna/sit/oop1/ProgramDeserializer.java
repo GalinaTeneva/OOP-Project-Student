@@ -1,6 +1,7 @@
 package bg.tu_varna.sit.oop1;
 
 import bg.tu_varna.sit.oop1.exceptions.DeserializationException;
+import bg.tu_varna.sit.oop1.exceptions.ProgramException;
 import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 import bg.tu_varna.sit.oop1.interfaces.CustomDeserializable;
 import bg.tu_varna.sit.oop1.models.Program;
@@ -21,8 +22,7 @@ public class ProgramDeserializer implements CustomDeserializable<Program> {
     }
 
     @Override
-    public Program deserialize(String data) throws DeserializationException {
-        try {
+    public Program deserialize(String data) throws DeserializationException, ProgramException, SubjectException {
             String[] parts = data.split(": ");
 
             if (parts.length < 2) {
@@ -52,9 +52,6 @@ public class ProgramDeserializer implements CustomDeserializable<Program> {
             }
 
             return program;
-        } catch (Exception e) {
-            throw new DeserializationException("Failed to deserialize Program: " + e.getMessage(), e);
-        }
     }
 
     private Subject getSubjectFromString(String subjectStr) throws SubjectException {

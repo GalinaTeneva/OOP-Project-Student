@@ -7,28 +7,22 @@ import java.util.Collection;
 import java.util.Scanner;
 
 public class Execute {
-    private Scanner scanner = new Scanner(System.in);
+    //TODO:Add method help!
 
-    //Add method help!
-
+    private Scanner scanner;
     private StudentSerializer studentSerializer;
     private StudentDeserializer studentDeserializer;
     private StudentService studentService;
-    private ProgramDeserializer programService;
-    //private FileManager programsFileManager;
     private FileManager studentsFileManager;
     private Collection<Student> students;
-    private Collection<Program> programs;
 
     public Execute() {
         this.studentSerializer = new StudentSerializer();
         this.studentDeserializer = new StudentDeserializer();
         this.studentService = new StudentService();
-        //this.programService = new ProgramDeserializer();
         this.students = studentService.getStudents();
-        //this.programs = programService.getPrograms();
         this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, students);
-        //this.programsFileManager = new FileManager(programService, programs);
+        this.scanner = scanner = new Scanner(System.in);
     }
 
     public void runProject() {

@@ -44,28 +44,40 @@ public class StudentService implements Reportable {
 
     }
 
-    public void enroll (String[] commandParts) throws ProgramException, StudentException {
+    public void enroll (String[] commandParts) throws ProgramException, StudentException, IOException, DeserializationException {
         //TODO: Make params number validation!!
-        //TODO: Check if the student exists and throw error if it doesn't!
+
         int facultyNumber = Integer.parseInt(commandParts[1]);
-        //TODO: Check if the program exists and throw error if it doesn't!
-        Program program = new Program(commandParts[2]);
+        Student student = findStudentByFn(facultyNumber);
+        if(student != null) {
+            throw  new StudentException("The student already exists in the database");
+        }
+
+        Collection<Program> programs = getProgramsFromDatabase(pathToProgramsDatabaseFile);
+        Program program = findProgramByName(commandParts[2], programs);
+
+        if(program == null) {
+            throw new ProgramException("The program is not part of the database."); //TODO: Make custom exception!
+        }
+        Program studentProgram = new Program(commandParts[2]);
+
         int group = Integer.parseInt(commandParts[3]);
         String studentName = commandParts[4];
         int year = 1;
 
-        Student newStudent = new Student(studentName, facultyNumber, program, year, group);
+        Student newStudent = new Student(studentName, facultyNumber, studentProgram, year, group);
         newStudent.setStatus("enrolled");
         students.add(newStudent);
     }
 
     public void advance(String[] commandParts) throws StudentException {
         //TODO: Make params number validation!!
+
         int facultyNumber = Integer.parseInt(commandParts[1]);
         Student student = findStudentByFn(facultyNumber);
 
         if(student == null) {
-            throw new StudentException("The student already exists!"); //TODO: Make custom exception!
+            throw new StudentException("The student is not part of the database!"); //TODO: Make custom exception!
         }
 
         student.setYear(student.getYear() + 1);
@@ -73,24 +85,28 @@ public class StudentService implements Reportable {
 
     public void change(String[] commandParts) throws Exception {
         //TODO: Make params number validation!!
+        //TODO: Test the method for changing group and year
+
         int facultyNumber = Integer.parseInt(commandParts[1]);
         String option = commandParts[2];
         String value = commandParts[3];
 
         Student student = findStudentByFn(facultyNumber);
+        if(student == null) {
+            throw new StudentException("The student is not part of the database!"); //TODO: Make custom exception!
+        }
+
         int currentYear = student.getYear();
 
         if (option.equals("program")) {
             Collection<Program> programs = getProgramsFromDatabase(pathToProgramsDatabaseFile);
-            Program newProgram = programs.stream()
-                    .filter(program -> program.getName().equalsIgnoreCase(value))
-                    .findFirst().orElse(null);
+            Program program = findProgramByName(value, programs);
 
-            if(newProgram == null) {
+            if(program == null) {
                 throw new ProgramException("The program is not part of the database."); //TODO: Make custom exception!
             }
 
-            Collection<Subject> necessarySubjects = newProgram.getSubjectsByCourse().entrySet()
+            Collection<Subject> necessarySubjects = program.getSubjectsByCourse().entrySet()
                     .stream()
                     .filter(entry -> entry.getKey() < currentYear)
                     .flatMap(entry -> entry.getValue().stream())
@@ -109,11 +125,11 @@ public class StudentService implements Reportable {
             }
 
             if(!allSubjectsMatch) {
-                //TODO: Write the custom exeption!
+                //TODO: Write the custom exception!
                 throw  new Exception("The student has to take all mandatory past exams from the new program in order to be enrolled in it");
             }
 
-            student.setProgram(newProgram);
+            student.setProgram(program);
 
         } else if (option.equals(("group"))) {
             student.setGroup(Integer.parseInt(value));
@@ -140,18 +156,6 @@ public class StudentService implements Reportable {
         } else {
             throw new Exception("Wrong parameter <option>."); //TODO: Make custom exception;
         }
-
-
-    }
-
-    //TODO: Remove the method. Open programs file every time the students file is open!
-    private Collection<Program> getProgramsFromDatabase(String path) throws IOException, DeserializationException {
-        Collection<Program> programsCollection = new HashSet<>();
-        ProgramDeserializer programDeserializer = new ProgramDeserializer();
-        FileManager programFileManager = new FileManager(programDeserializer, programsCollection);
-        programFileManager.open(path);
-
-        return  programsCollection;
     }
 
     public void graduate(int facultyNumber) {
@@ -174,13 +178,24 @@ public class StudentService implements Reportable {
 
     }
 
+    private Collection<Program> getProgramsFromDatabase(String path) throws IOException, DeserializationException {
+        Collection<Program> programsCollection = new HashSet<>();
+        ProgramDeserializer programDeserializer = new ProgramDeserializer();
+        FileManager programFileManager = new FileManager(programDeserializer, programsCollection);
+        programFileManager.open(path);
+
+        return  programsCollection;
+    }
+
     private Student findStudentByFn (int facultyNumber) {
         return  students.stream()
                 .filter(std -> std.getFacultyNumber() == facultyNumber)
                 .findFirst().orElse(null);
     }
 
-    /*private Program findProgramByName (String name) {
-
-    }*/
+    private Program findProgramByName (String name, Collection<Program> programs) {
+        return programs.stream()
+                .filter(program -> program.getName().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
+    }
 }

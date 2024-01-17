@@ -14,9 +14,7 @@ import java.util.Map;
 
 public class StudentDeserializer implements CustomDeserializable<Student> {
 
-    @Override
-    public Student deserialize(String line) throws DeserializationException {
-        try {
+    public Student deserialize(String line) throws DeserializationException, StudentException, ProgramException, SubjectException {
             String[] parts = line.split(" \\| ");
 
             if (parts.length < 6) {
@@ -47,8 +45,5 @@ public class StudentDeserializer implements CustomDeserializable<Student> {
             }
 
             return student;
-        } catch (StudentException | ProgramException | SubjectException e) {
-            throw new DeserializationException("Error deserializing data", e);
-        }
     }
 }
