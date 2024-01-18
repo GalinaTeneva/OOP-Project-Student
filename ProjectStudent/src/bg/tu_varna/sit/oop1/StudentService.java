@@ -178,12 +178,55 @@ public class StudentService implements Reportable {
         }
     }
 
-    public void enrollIn(int facultyNumber, String subjectName) {
+    public void enrollIn(String[] commandParts) throws StudentException, ProgramException {
+        int necessaryCommandParts = 3;
+        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+            int facultyNumber = Integer.parseInt(commandParts[1]);
+            String subjectName = commandParts[2];
 
+            Student student = findStudentByFn(facultyNumber);
+            int studentYear = student.getYear();
+            String studentProgramName = student.getProgram().getName();
+
+            // All subjects by course for the student's program
+            Map<Integer, Collection<Subject>> studentProgramSubjects = findProgramByName(studentProgramName).getSubjectsByCourse();
+
+            Collection<Subject> availableSubjects = studentProgramSubjects.get(studentYear); //all subject available for the student's current course
+            Subject subject = availableSubjects.stream()
+                    .filter(element -> element.getName().equalsIgnoreCase(subjectName))
+                    .findFirst()
+                    .orElse(null);
+
+            if (subject == null) {
+                throw new StudentException("The subject is part of another year of study or is not part of the student's program!."); //TODO: Make custom exception!
+            }
+
+            Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
+            studentGradesBySubject.put(subject, 2.00);
+        }
     }
 
-    public void addGrade(int facultyNumber, String subjectName, double grade) {
+    public void addGrade(String[] commandParts) throws Exception {
+        int necessaryCommandParts = 4;
+        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+            int facultyNumber = Integer.parseInt(commandParts[1]);
+            Student student = findStudentByFn(facultyNumber);
+            String subjectName = commandParts[2];
+            double grade = Double.parseDouble(commandParts[3]);
 
+            Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
+
+            Subject subject = studentGradesBySubject.keySet().stream()
+                    .filter(element -> element.getName().equalsIgnoreCase(subjectName))
+                    .findFirst()
+                    .orElseThrow(null);
+
+            if (subject == null) {
+                throw new Exception("The student is not enrolled in this subject"); //TODO: Make custom exception!
+            }
+
+            studentGradesBySubject.put(subject, grade);
+        }
     }
 
     private boolean checkCommandPartsLength(String[] parts, int count) {

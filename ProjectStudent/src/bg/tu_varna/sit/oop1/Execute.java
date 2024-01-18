@@ -82,6 +82,12 @@ public class Execute {
                     case "resume":
                         studentService.resume(commandParts);
                         break;
+                    case "enrollin":
+                        studentService.enrollIn(commandParts);
+                        break;
+                    case "addgrade":
+                        studentService.addGrade(commandParts);
+                        break;
                     default:
                         System.out.println("Unknown command");
                         break;
