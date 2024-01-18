@@ -139,18 +139,23 @@ public class StudentService implements Reportable {
     }
 
     public void graduate(String[] commandParts) throws StudentException {
-        //TODO: Make params number validation!!
+        int necessaryCommandParts = 2;
+        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+            int facultyNumber = Integer.parseInt(commandParts[1]);
+            Student student = findStudentByFn(facultyNumber);
 
-        int facultyNumber = Integer.parseInt(commandParts[1]);
-        Student student = findStudentByFn(facultyNumber);
+            Map<Subject, Double> studentGrades = student.getGradesBySubject();
 
-        boolean areAllExamsTaken = student.getGradesBySubject().values().stream()
-                .noneMatch(grade -> grade < 3.00);
-        if(!areAllExamsTaken) {
-            throw new StudentException("The student can not graduate due to not taken exams.");
+            boolean hasGrades = !studentGrades.isEmpty();
+            boolean areAllExamsPassed = hasGrades && studentGrades.values().stream()
+                    .noneMatch(grade -> grade < 3.00);
+
+            if (hasGrades && areAllExamsPassed) {
+                student.setStatus("graduated");
+            } else {
+                throw new StudentException("The student can not graduate due to not taken exams.");
+            }
         }
-
-        student.setStatus("graduated");
     }
 
     public void interrupt(int facultyNumber) {
@@ -171,7 +176,7 @@ public class StudentService implements Reportable {
 
     private boolean checkCommandPartsLength(String[] parts, int count) {
         if (parts.length != count) {
-            throw new IllegalArgumentException("Invalid number of arguments for enrollment.");
+            throw new IllegalArgumentException("Invalid number of arguments");
         }
 
         return true;

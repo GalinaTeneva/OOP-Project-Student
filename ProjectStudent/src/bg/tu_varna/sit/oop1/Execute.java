@@ -73,6 +73,9 @@ public class Execute {
                     case "change":
                         studentService.change(commandParts);
                         break;
+                    case "graduate":
+                        studentService.graduate(commandParts);
+                        break;
                     default:
                         System.out.println("Unknown command");
                         break;

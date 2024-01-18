@@ -27,7 +27,12 @@ public class StudentSerializer implements CustomSerializable<Student>{
                 if (gradesStringBuilder.length() > 0) {
                     gradesStringBuilder.append("; ");
                 }
-                gradesStringBuilder.append(entry.getKey().getName()).append(" -> ").append(entry.getKey().getType()).append(entry.getValue());
+                gradesStringBuilder
+                        .append(entry.getKey().getName())
+                        .append(" -> ")
+                        .append(entry.getKey().getType())
+                        .append(" -> ")
+                        .append(entry.getValue());
             }
             sb.append(gradesStringBuilder);
         }
