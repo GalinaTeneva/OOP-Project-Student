@@ -1,6 +1,6 @@
 package bg.tu_varna.sit.oop1.models;
 
-import bg.tu_varna.sit.oop1.Error;
+import bg.tu_varna.sit.oop1.UserMessages;
 import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 
 public class Subject {
@@ -19,7 +19,7 @@ public class Subject {
 
     public void setName (String name) throws SubjectException {
         if (name == null || name.isEmpty()) {
-            throw new SubjectException(Error.SUBJECT_NAME_NULL_VALUE.message);
+            throw new SubjectException(UserMessages.SUBJECT_NAME_NULL_VALUE.message);
         }
 
         this.name = name;
@@ -32,7 +32,7 @@ public class Subject {
 
     public void setType (String type) throws SubjectException {
         if (!type.equalsIgnoreCase("mandatory") && !type.equalsIgnoreCase("optional")) {
-            throw new SubjectException(Error.SUBJECT_TYPE_WRONG_VALUE.message);
+            throw new SubjectException(UserMessages.SUBJECT_TYPE_WRONG_VALUE.message);
         }
 
         this.type = type.toLowerCase();

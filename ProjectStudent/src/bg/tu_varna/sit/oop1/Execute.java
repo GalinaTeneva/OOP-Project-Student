@@ -36,14 +36,17 @@ public class Execute {
     }
 
     public void runProject() {
-        System.out.println("WELCOME");
-        System.out.println("This is a student management system");
+        System.out.println(UserMessages.GREETING.message);
 
         while (true) {
-            System.out.print("Enter command: ");
+            System.out.print(UserMessages.ENTER_COMMAND.message);
             String commandLine = scanner.nextLine();
             String[] commandParts = commandLine.split(" ");
+            if(commandParts.length < 2) {
+                throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
+            }
             String command = commandParts[0];
+            //TODO: Add the confirming messages after each method!
 
             try {
                 switch (command.toLowerCase()) {
@@ -89,7 +92,7 @@ public class Execute {
                         studentService.addGrade(commandParts);
                         break;
                     default:
-                        System.out.println("Unknown command");
+                        System.out.println(UserMessages.COMMAND_UNKNOWN);
                         break;
                 }
             } catch (Exception e) {

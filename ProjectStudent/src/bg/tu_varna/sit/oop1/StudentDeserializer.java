@@ -18,7 +18,7 @@ public class StudentDeserializer implements CustomDeserializable<Student> {
             String[] parts = line.split(" \\| ");
 
             if (parts.length < 6) {
-                throw new DeserializationException("Invalid serialized student data");
+                throw new DeserializationException(UserMessages.WRONG_STUDENT_DATA_FORMAT.message);
             }
 
             String name = parts[0];

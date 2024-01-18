@@ -26,7 +26,7 @@ public class ProgramDeserializer implements CustomDeserializable<Program> {
             String[] parts = data.split(": ");
 
             if (parts.length < 2) {
-                throw new DeserializationException("Invalid data format for Program");
+                throw new DeserializationException(UserMessages.WRONG_PROGRAM_DATA_FORMAT.message);
             }
 
             String programName = parts[0];
@@ -36,7 +36,7 @@ public class ProgramDeserializer implements CustomDeserializable<Program> {
             for (String coursePart : courseParts) {
                 String[] courseSplit = coursePart.split(" -> ");
                 if (courseSplit.length < 2) {
-                    throw new DeserializationException("Invalid course data format");
+                    throw new DeserializationException(UserMessages.WRONG_PROGRAM_DATA_FORMAT.message);
                 }
 
                 Integer courseNumber = Integer.parseInt(courseSplit[0]);

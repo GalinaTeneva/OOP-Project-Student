@@ -2,6 +2,7 @@ package bg.tu_varna.sit.oop1;
 
 import bg.tu_varna.sit.oop1.exceptions.ProgramException;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
+import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
@@ -25,6 +26,9 @@ public class StudentService implements Reportable {
     public Collection<Program> getPrograms(){
         return this.programs;
     }
+
+    //TODO: Try to move the reportable methods into new class StudentReportables which implements Reportable.
+    //TODO: Add an instance if class StudentReportables ij StudentServices. This instance will call the methods of class StudentReportables
 
     //Reportable methods
     @Override
@@ -57,7 +61,7 @@ public class StudentService implements Reportable {
             boolean doesStudentExist = students.stream()
                     .anyMatch(std -> std.getFacultyNumber() == facultyNumber);
             if(doesStudentExist) {
-                throw new StudentException("The student already exists in the database");
+                throw new IllegalArgumentException(UserMessages.STUDENT_EXISTS.message);
             }
 
             String programName = commandParts[2];
@@ -65,7 +69,7 @@ public class StudentService implements Reportable {
             boolean doesProgramExists = programs.stream()
                     .anyMatch(element -> element.getName().equalsIgnoreCase(programName));
             if(!doesProgramExists) {
-                throw new ProgramException("The program is not part of the database."); //TODO: Make custom exception!
+                throw new IllegalArgumentException(UserMessages.PROGRAM_NOT_FOUND.message);
             }
 
             Program studentProgram = new Program(programName);
@@ -125,7 +129,7 @@ public class StudentService implements Reportable {
                 } else if (option.equalsIgnoreCase("year")) {
                     int newYear = Integer.parseInt(value);
                     if (newYear == currentYear || newYear > currentYear + 1 || newYear < currentYear + 1) {
-                        throw new Exception("You can not change year to this value."); //TODO: Make custom exception!
+                        throw new IllegalArgumentException(UserMessages.NEW_STUDENT_YEAR_WRONG_VALUE.message);
                     }
 
                     int allowedFailedExams = 2;
@@ -134,7 +138,7 @@ public class StudentService implements Reportable {
                     }
 
                 } else {
-                    throw new Exception("Wrong parameter <option>."); //TODO: Make custom exception;
+                    throw new IllegalArgumentException(UserMessages.WRONG_PARAMETER.message);
                 }
             }
         }
@@ -155,7 +159,7 @@ public class StudentService implements Reportable {
             if (hasGrades && areAllExamsPassed) {
                 student.setStatus("graduated");
             } else {
-                throw new StudentException("The student can not graduate due to not taken exams.");
+                throw new StudentException(UserMessages.INSUFFICIENT_TAKEN_EXAMS.message);
             }
         }
     }
@@ -178,7 +182,7 @@ public class StudentService implements Reportable {
         }
     }
 
-    public void enrollIn(String[] commandParts) throws StudentException, ProgramException {
+    public void enrollIn(String[] commandParts) throws StudentException, ProgramException, SubjectException {
         int necessaryCommandParts = 3;
         if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
             int facultyNumber = Integer.parseInt(commandParts[1]);
@@ -191,14 +195,15 @@ public class StudentService implements Reportable {
             // All subjects by course for the student's program
             Map<Integer, Collection<Subject>> studentProgramSubjects = findProgramByName(studentProgramName).getSubjectsByCourse();
 
-            Collection<Subject> availableSubjects = studentProgramSubjects.get(studentYear); //all subject available for the student's current course
+            //all subject available for the student's current course
+            Collection<Subject> availableSubjects = studentProgramSubjects.get(studentYear);
             Subject subject = availableSubjects.stream()
                     .filter(element -> element.getName().equalsIgnoreCase(subjectName))
                     .findFirst()
                     .orElse(null);
 
             if (subject == null) {
-                throw new StudentException("The subject is part of another year of study or is not part of the student's program!."); //TODO: Make custom exception!
+                throw new IllegalArgumentException(UserMessages.INCORRECT_SUBJECT.message);
             }
 
             Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
@@ -211,18 +216,25 @@ public class StudentService implements Reportable {
         if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
             int facultyNumber = Integer.parseInt(commandParts[1]);
             Student student = findStudentByFn(facultyNumber);
+
+            //TODO: Check the student status - tudent can't get grade if interrupted
+
             String subjectName = commandParts[2];
             double grade = Double.parseDouble(commandParts[3]);
+
+            if (grade < 2.00 || grade > 6.00) {
+                throw new StudentException(UserMessages.GRADE_WRONG_VALUE.message);
+            }
 
             Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
 
             Subject subject = studentGradesBySubject.keySet().stream()
                     .filter(element -> element.getName().equalsIgnoreCase(subjectName))
                     .findFirst()
-                    .orElseThrow(null);
+                    .orElse(null);
 
             if (subject == null) {
-                throw new Exception("The student is not enrolled in this subject"); //TODO: Make custom exception!
+                throw new IllegalArgumentException(UserMessages.SUBJECT_NOT_ENROLLED.message);
             }
 
             studentGradesBySubject.put(subject, grade);
@@ -231,7 +243,7 @@ public class StudentService implements Reportable {
 
     private boolean checkCommandPartsLength(String[] parts, int count) {
         if (parts.length != count) {
-            throw new IllegalArgumentException("Invalid number of arguments");
+            throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
         }
 
         return true;
@@ -244,7 +256,7 @@ public class StudentService implements Reportable {
                 .orElse(null);
 
         if (student == null) {
-            throw new StudentException("The student is not part of the database!."); //TODO: Make custom exception!
+            throw new IllegalArgumentException(UserMessages.STUDENT_NOT_EXISTS.message);
         }
 
         return student;
@@ -257,7 +269,7 @@ public class StudentService implements Reportable {
                 .orElse(null);
 
         if(program == null) {
-            throw new ProgramException("The program is not part of the database."); //TODO: Make custom exception!
+            throw new IllegalArgumentException(UserMessages.PROGRAM_NOT_FOUND.message);
         }
 
         return program;
@@ -268,7 +280,7 @@ public class StudentService implements Reportable {
             Double grade = gradesBySubject.get(subject);
             if (grade == null || grade <= 3.00) {
                 //TODO: Write the custom exception!
-                throw new Exception("The student has to take all mandatory past exams from the new program in order to be enrolled in it");
+                throw new StudentException(UserMessages.INSUFFICIENT_EXAMS_FOR_PROGRAM_TRANSFER.message);
             }
         }
 
@@ -286,7 +298,7 @@ public class StudentService implements Reportable {
                 .size();
 
         if (failedMandatoryExamsCount > failedLimit) {
-            throw new Exception("The student failed more than 2 mandatory exams so he/she cannot advance to next year");
+            throw new StudentException(UserMessages.INSUFFICIENT_EXAMS_FOR_YEAR_TRANSFER.message);
         }
 
         return true;
@@ -295,7 +307,7 @@ public class StudentService implements Reportable {
     private boolean isStudentActive (Student student) throws Exception {
         StudentStatus studentStatus = student.getStatus();
         if(studentStatus.equals(StudentStatus.DROPPED)) {
-            throw new Exception("This student has interrupted education");
+            throw new StudentException(UserMessages.STUDENT_DROPPED.message);
         }
 
         return true;

@@ -1,6 +1,6 @@
 package bg.tu_varna.sit.oop1.models;
 
-import bg.tu_varna.sit.oop1.Error;
+import bg.tu_varna.sit.oop1.UserMessages;
 import bg.tu_varna.sit.oop1.exceptions.ProgramException;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public class Program {
 
     public void setName(String name) throws ProgramException {
         if(name == null || name.isEmpty()) {
-            throw new ProgramException(Error.PROGRAM_NAME_NULL_VALUE.message);
+            throw new ProgramException(UserMessages.PROGRAM_NAME_NULL_VALUE.message);
         }
 
         this.name = name;
@@ -36,10 +36,10 @@ public class Program {
     public void setSubjectsByCourse (Integer course, Collection<Subject> courseSubjects) throws ProgramException {
 
         if(course <= 0 || course > 4 ) {
-            throw new ProgramException(Error.PROGRAM_COURSE_WRONG_VALUE.message);
+            throw new ProgramException(UserMessages.PROGRAM_COURSE_WRONG_VALUE.message);
         }
         if (courseSubjects == null || courseSubjects.isEmpty()) {
-            throw new ProgramException(Error.PROGRAM_COURSE_SUBJECTS_VALUE.message);
+            throw new ProgramException(UserMessages.PROGRAM_COURSE_SUBJECTS_VALUE.message);
         }
 
         this.subjectsByCourse.put(course, courseSubjects);

@@ -1,6 +1,6 @@
 package bg.tu_varna.sit.oop1.models;
 
-import bg.tu_varna.sit.oop1.Error;
+import bg.tu_varna.sit.oop1.UserMessages;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
 import bg.tu_varna.sit.oop1.StudentStatus;
 
@@ -34,7 +34,7 @@ public class Student {
 
     public void setName (String name) throws StudentException {
         if (name == null || name.isEmpty()) {
-            throw new StudentException(bg.tu_varna.sit.oop1.Error.STUDENT_NAME_NULL_VALUE.message);
+            throw new StudentException(UserMessages.STUDENT_NAME_NULL_VALUE.message);
         }
 
         this.name = name;
@@ -47,7 +47,7 @@ public class Student {
 
     public void setFacultyNumber (Integer facultyNumber) throws StudentException {
         if (facultyNumber == null || facultyNumber == 0) {
-            throw new StudentException(bg.tu_varna.sit.oop1.Error.STUDENT_FN_NULL_VALUE.message);
+            throw new StudentException(UserMessages.STUDENT_FN_NULL_VALUE.message);
         }
 
         this.facultyNumber = facultyNumber;
@@ -60,7 +60,7 @@ public class Student {
 
     public void setYear(Integer year) throws StudentException {
         if (year == null || year == 0 || year > 4) {
-            throw new StudentException(Error.STUDENT_YEAR_WRONG_VALUE.message);
+            throw new StudentException(UserMessages.STUDENT_YEAR_WRONG_VALUE.message);
         }
 
         this.year = year;
@@ -73,7 +73,7 @@ public class Student {
 
     public void setProgram (Program program) throws StudentException {
         if (program == null) {
-            throw new StudentException(bg.tu_varna.sit.oop1.Error.STUDENT_PROGRAM_NULL_VALUE.message);
+            throw new StudentException(UserMessages.STUDENT_PROGRAM_NULL_VALUE.message);
         }
 
         this.program = program;
@@ -86,7 +86,7 @@ public class Student {
 
     public void setGroup (Integer group) throws StudentException {
         if (group == null || group == 0) {
-            throw new StudentException(Error.STUDENT_GROUP_NULL_VALUE.message);
+            throw new StudentException(UserMessages.STUDENT_GROUP_NULL_VALUE.message);
         }
 
         this.group = group;
@@ -99,7 +99,7 @@ public class Student {
 
     public void setStatus (String statusString) throws StudentException {
         if (!statusString.equalsIgnoreCase("enrolled") && !statusString.equalsIgnoreCase("dropped") && !statusString.equalsIgnoreCase("graduated")) {
-            throw new StudentException("Wrong status type");
+            throw new StudentException(UserMessages.STUDENT_STATUS_TYPE_WRONG_VALUE.message);
         }
 
         this.status = StudentStatus.valueOf(statusString.toUpperCase());
@@ -120,8 +120,7 @@ public class Student {
         return this.gradesBySubject;
     }
 
-    public void setGradesBySubject (Map<Subject, Double> gradesBySubject) {
-        //Write the validation!
+    public void setGradesBySubject (Map<Subject, Double> gradesBySubject) throws StudentException {
         this.gradesBySubject = gradesBySubject;
     }
 
