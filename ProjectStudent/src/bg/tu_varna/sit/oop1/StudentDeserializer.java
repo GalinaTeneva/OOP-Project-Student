@@ -36,8 +36,10 @@ public class StudentDeserializer implements CustomDeserializable<Student> {
                 String[] gradeParts = parts[6].split("; ");
                 for (String gradePart : gradeParts) {
                     String[] gradeSplit = gradePart.split(" -> ");
-                    Subject subject = new Subject(gradeSplit[0]);
-                    Double grade = Double.valueOf(gradeSplit[1]);
+                    String subjectName = gradeSplit[0];
+                    String subjectType = gradeSplit[1];
+                    Subject subject = new Subject(subjectName, subjectType);
+                    Double grade = Double.valueOf(gradeSplit[2]);
                     gradesBySubject.put(subject, grade);
                 }
 

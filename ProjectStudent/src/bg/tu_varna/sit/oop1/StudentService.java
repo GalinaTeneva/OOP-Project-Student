@@ -12,15 +12,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class StudentService implements Reportable {
-    private final String pathToProgramsDatabaseFile = "D:\\UserData\\Desktop\\ProgramsData.txt";
-    private HashSet<Student> students;
+    private Collection<Student> students;
+    private Collection<Program> programs;
 
     public StudentService() {
         this.students = new HashSet<>();
+        this.programs = new HashSet<>();
     }
 
     public Collection<Student> getStudents() {
         return this.students;
+    }
+
+    public Collection<Program> getPrograms(){
+        return this.programs;
     }
 
     //Reportable methods
@@ -44,7 +49,7 @@ public class StudentService implements Reportable {
 
     }
 
-    public void enroll (String[] commandParts) throws ProgramException, StudentException, IOException, DeserializationException {
+    public void enroll (String[] commandParts) throws ProgramException, StudentException {
         //TODO: Make params number validation!!
 
         int facultyNumber = Integer.parseInt(commandParts[1]);
@@ -53,7 +58,6 @@ public class StudentService implements Reportable {
             throw  new StudentException("The student already exists in the database");
         }
 
-        Collection<Program> programs = getProgramsFromDatabase(pathToProgramsDatabaseFile);
         Program program = findProgramByName(commandParts[2], programs);
 
         if(program == null) {
@@ -99,7 +103,6 @@ public class StudentService implements Reportable {
         int currentYear = student.getYear();
 
         if (option.equals("program")) {
-            Collection<Program> programs = getProgramsFromDatabase(pathToProgramsDatabaseFile);
             Program program = findProgramByName(value, programs);
 
             if(program == null) {
@@ -135,8 +138,8 @@ public class StudentService implements Reportable {
             student.setGroup(Integer.parseInt(value));
         } else if (option.equals(("year"))) {
             int newYear = Integer.parseInt(value);
-            if (newYear != currentYear + 1) {
-                throw new Exception("You can't skip years."); //TODO: Make custom exception!
+            if (newYear == currentYear || newYear > currentYear + 1 || newYear < currentYear + 1) {
+                throw new Exception("You can not change year to this value."); //TODO: Make custom exception!
             }
 
             int failedMandatoryExamsCount = student.getGradesBySubject().entrySet()
@@ -176,15 +179,6 @@ public class StudentService implements Reportable {
 
     public void addGrade(int facultyNumber, String subjectName, double grade) {
 
-    }
-
-    private Collection<Program> getProgramsFromDatabase(String path) throws IOException, DeserializationException {
-        Collection<Program> programsCollection = new HashSet<>();
-        ProgramDeserializer programDeserializer = new ProgramDeserializer();
-        FileManager programFileManager = new FileManager(programDeserializer, programsCollection);
-        programFileManager.open(path);
-
-        return  programsCollection;
     }
 
     private Student findStudentByFn (int facultyNumber) {

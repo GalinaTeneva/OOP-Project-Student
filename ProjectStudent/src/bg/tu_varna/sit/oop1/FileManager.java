@@ -26,10 +26,6 @@ public class FileManager<T> {
         this.objectCollection = objectCollection;
     }
 
-    public Collection<T> getObjectCollection() {
-        return this.objectCollection;
-    }
-
     public void open (String filePath) throws IOException, DeserializationException {
         this.currentFilePath = filePath;
         File file = new File(filePath);

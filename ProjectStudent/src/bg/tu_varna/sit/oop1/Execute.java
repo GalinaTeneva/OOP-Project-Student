@@ -9,6 +9,8 @@ import java.util.Scanner;
 public class Execute {
     //TODO:Add method help!
 
+    private String pathToProgramsDatabaseFile = "D:\\UserData\\Desktop\\ProgramsData.txt";
+
     private Scanner scanner;
     private StudentSerializer studentSerializer;
     private StudentDeserializer studentDeserializer;
@@ -16,13 +18,21 @@ public class Execute {
     private FileManager studentsFileManager;
     private Collection<Student> students;
 
+    private Collection<Program> programs;
+    private ProgramDeserializer programDeserializer;
+    private FileManager programFileManager;
+
     public Execute() {
         this.studentSerializer = new StudentSerializer();
         this.studentDeserializer = new StudentDeserializer();
         this.studentService = new StudentService();
         this.students = studentService.getStudents();
+        this.programs = studentService.getPrograms();
         this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, students);
         this.scanner = scanner = new Scanner(System.in);
+
+        this.programDeserializer = new ProgramDeserializer();
+        this.programFileManager = new FileManager(programDeserializer, programs);
     }
 
     public void runProject() {
@@ -40,6 +50,7 @@ public class Execute {
                     //general commands
                     case "open":
                         studentsFileManager.open(commandParts[1]);
+                        programFileManager.open(pathToProgramsDatabaseFile);
                         break;
                     case "close":
                         studentsFileManager.close();

@@ -3,15 +3,9 @@ package bg.tu_varna.sit.oop1.models;
 import bg.tu_varna.sit.oop1.Error;
 import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 
-import java.io.Serializable;
-
-public class Subject implements Serializable {
+public class Subject {
     private String name;
     private String type;
-
-    public Subject (String name) throws SubjectException {
-        setName(name);
-    }
 
     public Subject (String name, String type) throws SubjectException {
         setName(name);
