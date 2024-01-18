@@ -100,40 +100,42 @@ public class StudentService implements Reportable {
             String value = commandParts[3];
 
             Student student = findStudentByFn(facultyNumber);
-            int currentYear = student.getYear();
-            Map<Subject, Double> gradesBySubject = student.getGradesBySubject();
+            if(isStudentActive(student)){
+                int currentYear = student.getYear();
+                Map<Subject, Double> gradesBySubject = student.getGradesBySubject();
 
-            if (option.equalsIgnoreCase("program")) {
-                Program program = findProgramByName(value);
+                if (option.equalsIgnoreCase("program")) {
+                    Program program = findProgramByName(value);
 
-                Collection<Subject> mandatorySubjects = program.getSubjectsByCourse().entrySet()
-                        .stream()
-                        .filter(entry -> entry.getKey() < currentYear)
-                        .flatMap(entry -> entry.getValue().stream())
-                        .filter(subject -> "mandatory".equals(subject.getType()))
-                        .collect(Collectors.toList());
+                    Collection<Subject> mandatorySubjects = program.getSubjectsByCourse().entrySet()
+                            .stream()
+                            .filter(entry -> entry.getKey() < currentYear)
+                            .flatMap(entry -> entry.getValue().stream())
+                            .filter(subject -> "mandatory".equals(subject.getType()))
+                            .collect(Collectors.toList());
 
-                boolean areMandatoryExamsTaken = checkMandatorySubjectsGrades(gradesBySubject, mandatorySubjects);
-                if(areMandatoryExamsTaken) {
-                    student.setProgram(program);
+                    boolean areMandatoryExamsTaken = checkMandatorySubjectsGrades(gradesBySubject, mandatorySubjects);
+                    if(areMandatoryExamsTaken) {
+                        student.setProgram(program);
+                    }
+
+                } else if (option.equalsIgnoreCase("group")) {
+                    student.setGroup(Integer.parseInt(value));
+
+                } else if (option.equalsIgnoreCase("year")) {
+                    int newYear = Integer.parseInt(value);
+                    if (newYear == currentYear || newYear > currentYear + 1 || newYear < currentYear + 1) {
+                        throw new Exception("You can not change year to this value."); //TODO: Make custom exception!
+                    }
+
+                    int allowedFailedExams = 2;
+                    if (isStudentAllowedTransfer(student, allowedFailedExams)) {
+                        student.setYear(student.getYear() + 1);
+                    }
+
+                } else {
+                    throw new Exception("Wrong parameter <option>."); //TODO: Make custom exception;
                 }
-
-            } else if (option.equalsIgnoreCase("group")) {
-                student.setGroup(Integer.parseInt(value));
-
-            } else if (option.equalsIgnoreCase("year")) {
-                int newYear = Integer.parseInt(value);
-                if (newYear == currentYear || newYear > currentYear + 1 || newYear < currentYear + 1) {
-                    throw new Exception("You can not change year to this value."); //TODO: Make custom exception!
-                }
-
-                int allowedFailedExams = 2;
-                if (isStudentAllowedTransfer(student, allowedFailedExams)) {
-                    student.setYear(student.getYear() + 1);
-                }
-
-            } else {
-                throw new Exception("Wrong parameter <option>."); //TODO: Make custom exception;
             }
         }
     }
@@ -158,12 +160,22 @@ public class StudentService implements Reportable {
         }
     }
 
-    public void interrupt(int facultyNumber) {
-
+    public void interrupt(String[] commandParts) throws StudentException {
+        int necessaryCommandParts = 2;
+        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+            int facultyNumber = Integer.parseInt(commandParts[1]);
+            Student student = findStudentByFn(facultyNumber);
+            student.setStatus("dropped");
+        }
     }
 
-    public void resume(int facultyNumber) {
-
+    public void resume(String[] commandParts) throws StudentException {
+        int necessaryCommandParts = 2;
+        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+            int facultyNumber = Integer.parseInt(commandParts[1]);
+            Student student = findStudentByFn(facultyNumber);
+            student.setStatus("enrolled");
+        }
     }
 
     public void enrollIn(int facultyNumber, String subjectName) {
@@ -232,6 +244,15 @@ public class StudentService implements Reportable {
 
         if (failedMandatoryExamsCount > failedLimit) {
             throw new Exception("The student failed more than 2 mandatory exams so he/she cannot advance to next year");
+        }
+
+        return true;
+    }
+
+    private boolean isStudentActive (Student student) throws Exception {
+        StudentStatus studentStatus = student.getStatus();
+        if(studentStatus.equals(StudentStatus.DROPPED)) {
+            throw new Exception("This student has interrupted education");
         }
 
         return true;

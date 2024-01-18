@@ -76,6 +76,12 @@ public class Execute {
                     case "graduate":
                         studentService.graduate(commandParts);
                         break;
+                    case "interrupt":
+                        studentService.interrupt(commandParts);
+                        break;
+                    case "resume":
+                        studentService.resume(commandParts);
+                        break;
                     default:
                         System.out.println("Unknown command");
                         break;
