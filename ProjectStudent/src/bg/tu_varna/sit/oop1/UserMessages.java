@@ -42,9 +42,8 @@ public enum UserMessages {
     COMMAND_UNKNOWN("Unknown command name."),
     WRONG_ARGUMENTS_COUNT("Invalid number of arguments."),
     EXIT("Exiting..."),
-    FILE_NOT_LOADED("File not opened.");
-
-    //Successful messages:
+    FILE_NOT_LOADED("File not opened."),
+    STUDENT_STATUS_CHANGED("Successfully changed student %d status.");
 
     public final String message;
 

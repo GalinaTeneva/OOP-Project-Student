@@ -86,6 +86,7 @@ public class StudentService implements Reportable {
         Student student = findStudentByFn(facultyNumber);
 
         student.setYear(student.getYear() + 1);
+        System.out.println(String.format("Successfully changed student %d year.", facultyNumber));
     }
 
     public void change(String[] commandParts) throws Exception {
@@ -108,13 +109,13 @@ public class StudentService implements Reportable {
                         .filter(subject -> "mandatory".equals(subject.getType()))
                         .collect(Collectors.toList());
 
-                boolean areMandatoryExamsTaken = checkMandatorySubjectsGrades(gradesBySubject, mandatorySubjects);
-                if(areMandatoryExamsTaken) {
+                checkMandatorySubjectsGrades(gradesBySubject, mandatorySubjects);
                     student.setProgram(program);
-                }
+                System.out.println(String.format("Successfully changed student %d program to %s.", facultyNumber, value));
 
             } else if (option.equalsIgnoreCase("group")) {
                 student.setGroup(Integer.parseInt(value));
+                System.out.println(String.format("Successfully changed student %d group to %s.", facultyNumber, value));
 
             } else if (option.equalsIgnoreCase("year")) {
                 int newYear = Integer.parseInt(value);
@@ -125,6 +126,7 @@ public class StudentService implements Reportable {
                 int allowedFailedExams = 2;
                 if (isStudentAllowedTransfer(student, allowedFailedExams)) {
                     student.setYear(student.getYear() + 1);
+                    System.out.println(String.format("Successfully changed student %d year.", facultyNumber));
                 }
 
             } else {
@@ -145,6 +147,7 @@ public class StudentService implements Reportable {
 
         if (hasGrades && areAllExamsPassed) {
             student.setStatus("graduated");
+            System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
         } else {
             throw new StudentException(UserMessages.INSUFFICIENT_TAKEN_EXAMS.message);
         }
@@ -154,15 +157,17 @@ public class StudentService implements Reportable {
         int facultyNumber = Integer.parseInt(commandParts[1]);
         Student student = findStudentByFn(facultyNumber);
         student.setStatus("dropped");
+        System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
     }
 
     public void resume(String[] commandParts) throws StudentException {
         int facultyNumber = Integer.parseInt(commandParts[1]);
         Student student = findStudentByFn(facultyNumber);
         student.setStatus("enrolled");
+        System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
     }
 
-    public void enrollIn(String[] commandParts) throws StudentException, ProgramException {
+    public void enrollIn(String[] commandParts) {
         int facultyNumber = Integer.parseInt(commandParts[1]);
         String subjectName = commandParts[2];
 
@@ -186,6 +191,7 @@ public class StudentService implements Reportable {
 
         Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
         studentGradesBySubject.put(subject, 2.00);
+        System.out.println(String.format("Successfully enrolled student %d in course %s", facultyNumber, subjectName));
     }
 
     public void addGrade(String[] commandParts) throws StudentException {
@@ -216,6 +222,7 @@ public class StudentService implements Reportable {
         }
 
         studentGradesBySubject.put(subject, grade);
+        System.out.println(String.format("Successfully added grade %f for course %s in student %d record", grade, subjectName, facultyNumber));
     }
 
     /*private boolean checkCommandPartsLength(String[] parts, int count) {
@@ -252,15 +259,13 @@ public class StudentService implements Reportable {
         return program;
     }
 
-    private boolean checkMandatorySubjectsGrades(Map<Subject, Double> gradesBySubject, Collection<Subject> mandatorySubjects) throws Exception {
+    private void checkMandatorySubjectsGrades(Map<Subject, Double> gradesBySubject, Collection<Subject> mandatorySubjects) throws Exception {
         for (Subject subject : mandatorySubjects) {
             Double grade = gradesBySubject.get(subject);
             if (grade == null || grade <= 3.00) {
                 throw new StudentException(UserMessages.INSUFFICIENT_EXAMS_FOR_PROGRAM_TRANSFER.message);
             }
         }
-
-        return true;
     }
 
     private boolean isStudentAllowedTransfer(Student student, int failedLimit) throws Exception {

@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class Execute {
     //TODO:Add method help!
-    //TODO: Add the confirming messages after each method!
 
     private String pathToProgramsDatabaseFile = "D:\\UserData\\Desktop\\ProgramsData.txt";
 
@@ -159,6 +158,7 @@ public class Execute {
             }
         }
     }
+
     private boolean checkCommandPartsLength(String[] parts, int count) {
         if (parts.length != count) {
             throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
