@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Execute {
     //TODO:Add method help!
+    //TODO: Add the confirming messages after each method!
 
     private String pathToProgramsDatabaseFile = "D:\\UserData\\Desktop\\ProgramsData.txt";
 
@@ -36,68 +37,139 @@ public class Execute {
     }
 
     public void runProject() {
+        boolean isFileLoaded = false;
+        String fileName = "";
+        int necessaryCommandParts;
+
         System.out.println(UserMessages.GREETING.message);
 
         while (true) {
             System.out.print(UserMessages.ENTER_COMMAND.message);
             String commandLine = scanner.nextLine();
             String[] commandParts = commandLine.split(" ");
-            if(commandParts.length < 2) {
-                throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
+
+            String command = commandParts[0].toLowerCase();
+
+            if(command.equals("exit")) {
+                System.out.println(UserMessages.EXIT.message);
+                return;
             }
-            String command = commandParts[0];
-            //TODO: Add the confirming messages after each method!
 
             try {
-                switch (command.toLowerCase()) {
+            if(command.equals("open") && !isFileLoaded) {
+                necessaryCommandParts = 2;
+                if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                    studentsFileManager.open(commandParts[1]);
+                    programFileManager.open(pathToProgramsDatabaseFile);
+                }
+
+                fileName = getFileName(commandParts[1]);
+                System.out.println("Successfully opened " + fileName);
+                isFileLoaded = true;
+                continue;
+            }
+
+            if(!isFileLoaded) {
+                throw new Exception(UserMessages.FILE_NOT_LOADED.message);
+            }
+
+                switch (command) {
                     //general commands
                     case "open":
-                        studentsFileManager.open(commandParts[1]);
-                        programFileManager.open(pathToProgramsDatabaseFile);
+                            System.out.println(fileName + " is already opened.");
                         break;
                     case "close":
-                        studentsFileManager.close();
+                        necessaryCommandParts = 1;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentsFileManager.close();
+                            isFileLoaded = false;
+                            System.out.println("Successfully closed " + fileName);
+                        }
                         break;
                     case "save":
-                        studentsFileManager.save();
+                        necessaryCommandParts = 1;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentsFileManager.save();
+                            System.out.println("Successfully saved " + fileName);
+                        }
                         break;
                     case "saveas":
-                        studentsFileManager.saveAs(commandParts[1]);
+                        necessaryCommandParts = 2;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentsFileManager.saveAs(commandParts[1]);
+                            String anotherFileName = getFileName(commandParts[1]);
+                            System.out.println("Successfully saved another " + anotherFileName);
+                        }
                         break;
-                    case "exit":
-                        return;
                     //StudentServiceCommands
                     case "enroll":
-                        studentService.enroll(commandParts);
+                        necessaryCommandParts = 5;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentService.enroll(commandParts);
+                        }
                         break;
                     case "advance":
-                        studentService.advance(commandParts);
+                        necessaryCommandParts = 2;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentService.advance(commandParts);
+                        }
                         break;
                     case "change":
-                        studentService.change(commandParts);
+                        necessaryCommandParts = 4;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentService.change(commandParts);
+                        }
                         break;
                     case "graduate":
-                        studentService.graduate(commandParts);
+                        necessaryCommandParts = 2;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentService.graduate(commandParts);
+                        }
                         break;
                     case "interrupt":
-                        studentService.interrupt(commandParts);
+                        necessaryCommandParts = 2;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentService.interrupt(commandParts);
+                        }
                         break;
                     case "resume":
-                        studentService.resume(commandParts);
+                        necessaryCommandParts = 2;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentService.resume(commandParts);
+                        }
                         break;
                     case "enrollin":
-                        studentService.enrollIn(commandParts);
+                        necessaryCommandParts = 3;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentService.enrollIn(commandParts);
+                        }
                         break;
                     case "addgrade":
-                        studentService.addGrade(commandParts);
+                        necessaryCommandParts = 4;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentService.addGrade(commandParts);
+                        }
                         break;
                     default:
-                        System.out.println(UserMessages.COMMAND_UNKNOWN);
+                        System.out.println(UserMessages.COMMAND_UNKNOWN.message);
                         break;
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+    private boolean checkCommandPartsLength(String[] parts, int count) {
+        if (parts.length != count) {
+            throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
+        }
+
+        return true;
+    }
+
+    private String getFileName(String text) {
+        String[] filePathParts = text.split("\\\\");
+        String fileName = filePathParts[filePathParts.length - 1];
+        return  fileName;
     }
 }

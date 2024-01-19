@@ -26,22 +26,23 @@ public enum UserMessages {
     //StudentService exceptions:
     STUDENT_EXISTS("The student already exists in the database."),
     STUDENT_NOT_EXISTS("The student is not part of the database!."),
-    STUDENT_DROPPED("This student has interrupted education"),
+    STUDENT_DROPPED("This student has interrupted education."),
     PROGRAM_NOT_FOUND("The program is not part of the database."),
     NEW_STUDENT_YEAR_WRONG_VALUE("The student can not skip years."),
     WRONG_PARAMETER("Wrong parameter <option>."),
-    INSUFFICIENT_TAKEN_EXAMS("The student must pass all the exams from his/her program"),
-    INSUFFICIENT_EXAMS_FOR_PROGRAM_TRANSFER("The student has to take all mandatory past exams from the new program in order to be enrolled in it"),
-    INSUFFICIENT_EXAMS_FOR_YEAR_TRANSFER("The student failed more than 2 mandatory exams so he/she cannot advance to next year"),
+    INSUFFICIENT_TAKEN_EXAMS("The student must pass all the exams from his/her program."),
+    INSUFFICIENT_EXAMS_FOR_PROGRAM_TRANSFER("The student has to take all mandatory past exams from the new program in order to be enrolled in it."),
+    INSUFFICIENT_EXAMS_FOR_YEAR_TRANSFER("The student failed more than 2 mandatory exams so he/she cannot advance to next year."),
     INCORRECT_SUBJECT("The subject is part of another year of study or is not part of the student's program!."),
-    SUBJECT_NOT_ENROLLED("The student is not enrolled in this subject"),
+    SUBJECT_NOT_ENROLLED("The student is not enrolled in this subject."),
 
     //General messages
     GREETING("WELCOME!"),
     ENTER_COMMAND("Enter command: "),
-    COMMAND_UNKNOWN("Unknown command name"),
-    WRONG_ARGUMENTS_COUNT("Invalid number of arguments");
-
+    COMMAND_UNKNOWN("Unknown command name."),
+    WRONG_ARGUMENTS_COUNT("Invalid number of arguments."),
+    EXIT("Exiting..."),
+    FILE_NOT_LOADED("File not opened.");
 
     //Successful messages:
 

@@ -2,7 +2,6 @@ package bg.tu_varna.sit.oop1;
 
 import bg.tu_varna.sit.oop1.exceptions.ProgramException;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
-import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
@@ -52,10 +51,6 @@ public class StudentService implements Reportable {
     }
 
     public void enroll (String[] commandParts) throws ProgramException, StudentException {
-        int necessaryCommandParts = 5;
-
-        if (checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-
             int facultyNumber = Integer.parseInt(commandParts[1]);
             //Checking if student with this faculty number is already enrolled
             boolean doesStudentExist = students.stream()
@@ -80,176 +75,158 @@ public class StudentService implements Reportable {
 
             Student newStudent = new Student(studentName, facultyNumber, studentProgram, year, group);
             newStudent.setStatus("enrolled");
+
             students.add(newStudent);
-        }
+            System.out.println(String.format("Successfully enrolled student %s with faculty number %d in group %d of program %s.", studentName, facultyNumber, group, programName));
+
     }
 
     public void advance(String[] commandParts) throws StudentException {
-        int necessaryCommandParts = 2;
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        Student student = findStudentByFn(facultyNumber);
 
-        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-            int facultyNumber = Integer.parseInt(commandParts[1]);
-            Student student = findStudentByFn(facultyNumber);
-
-            student.setYear(student.getYear() + 1);
-        }
+        student.setYear(student.getYear() + 1);
     }
 
     public void change(String[] commandParts) throws Exception {
-        int necessaryCommandParts = 4;
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        String option = commandParts[2];
+        String value = commandParts[3];
 
-        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-            int facultyNumber = Integer.parseInt(commandParts[1]);
-            String option = commandParts[2];
-            String value = commandParts[3];
+        Student student = findStudentByFn(facultyNumber);
+        if(isStudentActive(student)){
+            int currentYear = student.getYear();
+            Map<Subject, Double> gradesBySubject = student.getGradesBySubject();
 
-            Student student = findStudentByFn(facultyNumber);
-            if(isStudentActive(student)){
-                int currentYear = student.getYear();
-                Map<Subject, Double> gradesBySubject = student.getGradesBySubject();
+            if (option.equalsIgnoreCase("program")) {
+                Program program = findProgramByName(value);
 
-                if (option.equalsIgnoreCase("program")) {
-                    Program program = findProgramByName(value);
+                Collection<Subject> mandatorySubjects = program.getSubjectsByCourse().entrySet()
+                        .stream()
+                        .filter(entry -> entry.getKey() < currentYear)
+                        .flatMap(entry -> entry.getValue().stream())
+                        .filter(subject -> "mandatory".equals(subject.getType()))
+                        .collect(Collectors.toList());
 
-                    Collection<Subject> mandatorySubjects = program.getSubjectsByCourse().entrySet()
-                            .stream()
-                            .filter(entry -> entry.getKey() < currentYear)
-                            .flatMap(entry -> entry.getValue().stream())
-                            .filter(subject -> "mandatory".equals(subject.getType()))
-                            .collect(Collectors.toList());
-
-                    boolean areMandatoryExamsTaken = checkMandatorySubjectsGrades(gradesBySubject, mandatorySubjects);
-                    if(areMandatoryExamsTaken) {
-                        student.setProgram(program);
-                    }
-
-                } else if (option.equalsIgnoreCase("group")) {
-                    student.setGroup(Integer.parseInt(value));
-
-                } else if (option.equalsIgnoreCase("year")) {
-                    int newYear = Integer.parseInt(value);
-                    if (newYear == currentYear || newYear > currentYear + 1 || newYear < currentYear + 1) {
-                        throw new IllegalArgumentException(UserMessages.NEW_STUDENT_YEAR_WRONG_VALUE.message);
-                    }
-
-                    int allowedFailedExams = 2;
-                    if (isStudentAllowedTransfer(student, allowedFailedExams)) {
-                        student.setYear(student.getYear() + 1);
-                    }
-
-                } else {
-                    throw new IllegalArgumentException(UserMessages.WRONG_PARAMETER.message);
+                boolean areMandatoryExamsTaken = checkMandatorySubjectsGrades(gradesBySubject, mandatorySubjects);
+                if(areMandatoryExamsTaken) {
+                    student.setProgram(program);
                 }
+
+            } else if (option.equalsIgnoreCase("group")) {
+                student.setGroup(Integer.parseInt(value));
+
+            } else if (option.equalsIgnoreCase("year")) {
+                int newYear = Integer.parseInt(value);
+                if (newYear == currentYear || newYear > currentYear + 1 || newYear < currentYear + 1) {
+                    throw new IllegalArgumentException(UserMessages.NEW_STUDENT_YEAR_WRONG_VALUE.message);
+                }
+
+                int allowedFailedExams = 2;
+                if (isStudentAllowedTransfer(student, allowedFailedExams)) {
+                    student.setYear(student.getYear() + 1);
+                }
+
+            } else {
+                throw new IllegalArgumentException(UserMessages.WRONG_PARAMETER.message);
             }
         }
     }
 
     public void graduate(String[] commandParts) throws StudentException {
-        int necessaryCommandParts = 2;
-        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-            int facultyNumber = Integer.parseInt(commandParts[1]);
-            Student student = findStudentByFn(facultyNumber);
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        Student student = findStudentByFn(facultyNumber);
 
-            Map<Subject, Double> studentGrades = student.getGradesBySubject();
+        Map<Subject, Double> studentGrades = student.getGradesBySubject();
 
-            boolean hasGrades = !studentGrades.isEmpty();
-            boolean areAllExamsPassed = hasGrades && studentGrades.values().stream()
-                    .noneMatch(grade -> grade < 3.00);
+        boolean hasGrades = !studentGrades.isEmpty();
+        boolean areAllExamsPassed = hasGrades && studentGrades.values().stream()
+                .noneMatch(grade -> grade < 3.00);
 
-            if (hasGrades && areAllExamsPassed) {
-                student.setStatus("graduated");
-            } else {
-                throw new StudentException(UserMessages.INSUFFICIENT_TAKEN_EXAMS.message);
-            }
+        if (hasGrades && areAllExamsPassed) {
+            student.setStatus("graduated");
+        } else {
+            throw new StudentException(UserMessages.INSUFFICIENT_TAKEN_EXAMS.message);
         }
     }
 
     public void interrupt(String[] commandParts) throws StudentException {
-        int necessaryCommandParts = 2;
-        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-            int facultyNumber = Integer.parseInt(commandParts[1]);
-            Student student = findStudentByFn(facultyNumber);
-            student.setStatus("dropped");
-        }
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        Student student = findStudentByFn(facultyNumber);
+        student.setStatus("dropped");
     }
 
     public void resume(String[] commandParts) throws StudentException {
-        int necessaryCommandParts = 2;
-        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-            int facultyNumber = Integer.parseInt(commandParts[1]);
-            Student student = findStudentByFn(facultyNumber);
-            student.setStatus("enrolled");
-        }
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        Student student = findStudentByFn(facultyNumber);
+        student.setStatus("enrolled");
     }
 
-    public void enrollIn(String[] commandParts) throws StudentException, ProgramException, SubjectException {
-        int necessaryCommandParts = 3;
-        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-            int facultyNumber = Integer.parseInt(commandParts[1]);
-            String subjectName = commandParts[2];
+    public void enrollIn(String[] commandParts) throws StudentException, ProgramException {
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        String subjectName = commandParts[2];
 
-            Student student = findStudentByFn(facultyNumber);
-            int studentYear = student.getYear();
-            String studentProgramName = student.getProgram().getName();
+        Student student = findStudentByFn(facultyNumber);
+        int studentYear = student.getYear();
+        String studentProgramName = student.getProgram().getName();
 
-            // All subjects by course for the student's program
-            Map<Integer, Collection<Subject>> studentProgramSubjects = findProgramByName(studentProgramName).getSubjectsByCourse();
+        // All subjects by course for the student's program
+        Map<Integer, Collection<Subject>> studentProgramSubjects = findProgramByName(studentProgramName).getSubjectsByCourse();
 
-            //all subject available for the student's current course
-            Collection<Subject> availableSubjects = studentProgramSubjects.get(studentYear);
-            Subject subject = availableSubjects.stream()
-                    .filter(element -> element.getName().equalsIgnoreCase(subjectName))
-                    .findFirst()
-                    .orElse(null);
+        //all subject available for the student's current course
+        Collection<Subject> availableSubjects = studentProgramSubjects.get(studentYear);
+        Subject subject = availableSubjects.stream()
+                .filter(element -> element.getName().equalsIgnoreCase(subjectName))
+                .findFirst()
+                .orElse(null);
 
-            if (subject == null) {
-                throw new IllegalArgumentException(UserMessages.INCORRECT_SUBJECT.message);
-            }
-
-            Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
-            studentGradesBySubject.put(subject, 2.00);
+        if (subject == null) {
+            throw new IllegalArgumentException(UserMessages.INCORRECT_SUBJECT.message);
         }
+
+        Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
+        studentGradesBySubject.put(subject, 2.00);
     }
 
-    public void addGrade(String[] commandParts) throws Exception {
-        int necessaryCommandParts = 4;
-        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-            int facultyNumber = Integer.parseInt(commandParts[1]);
-            Student student = findStudentByFn(facultyNumber);
+    public void addGrade(String[] commandParts) throws StudentException {
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        String subjectName = commandParts[2];
+        double grade = Double.parseDouble(commandParts[3]);
 
-            //TODO: Check the student status - tudent can't get grade if interrupted
-
-            String subjectName = commandParts[2];
-            double grade = Double.parseDouble(commandParts[3]);
-
-            if (grade < 2.00 || grade > 6.00) {
-                throw new StudentException(UserMessages.GRADE_WRONG_VALUE.message);
-            }
-
-            Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
-
-            Subject subject = studentGradesBySubject.keySet().stream()
-                    .filter(element -> element.getName().equalsIgnoreCase(subjectName))
-                    .findFirst()
-                    .orElse(null);
-
-            if (subject == null) {
-                throw new IllegalArgumentException(UserMessages.SUBJECT_NOT_ENROLLED.message);
-            }
-
-            studentGradesBySubject.put(subject, grade);
+        if (grade < 2.00 || grade > 6.00) {
+            throw new StudentException(UserMessages.GRADE_WRONG_VALUE.message);
         }
+
+        Student student = findStudentByFn(facultyNumber);
+        StudentStatus studentStatus = student.getStatus();
+
+        if (studentStatus.toString().equalsIgnoreCase("dropped")) {
+            throw new IllegalArgumentException(UserMessages.STUDENT_DROPPED.message);
+        }
+
+        Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
+
+        Subject subject = studentGradesBySubject.keySet().stream()
+                .filter(element -> element.getName().equalsIgnoreCase(subjectName))
+                .findFirst()
+                .orElse(null);
+
+        if (subject == null) {
+            throw new IllegalArgumentException(UserMessages.SUBJECT_NOT_ENROLLED.message);
+        }
+
+        studentGradesBySubject.put(subject, grade);
     }
 
-    private boolean checkCommandPartsLength(String[] parts, int count) {
+    /*private boolean checkCommandPartsLength(String[] parts, int count) {
         if (parts.length != count) {
             throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
         }
 
         return true;
-    }
+    }*/
 
-    private Student findStudentByFn (int facultyNumber) throws StudentException {
+    private Student findStudentByFn (int facultyNumber) {
         Student student = students.stream()
                 .filter(std -> std.getFacultyNumber() == facultyNumber)
                 .findFirst()
@@ -262,7 +239,7 @@ public class StudentService implements Reportable {
         return student;
     }
 
-    private Program findProgramByName (String name) throws ProgramException {
+    private Program findProgramByName (String name) {
         Program program = programs.stream()
                 .filter(element -> element.getName().equalsIgnoreCase(name))
                 .findFirst()
@@ -279,7 +256,6 @@ public class StudentService implements Reportable {
         for (Subject subject : mandatorySubjects) {
             Double grade = gradesBySubject.get(subject);
             if (grade == null || grade <= 3.00) {
-                //TODO: Write the custom exception!
                 throw new StudentException(UserMessages.INSUFFICIENT_EXAMS_FOR_PROGRAM_TRANSFER.message);
             }
         }
