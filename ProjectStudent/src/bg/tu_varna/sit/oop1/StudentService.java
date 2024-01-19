@@ -51,33 +51,33 @@ public class StudentService implements Reportable {
     }
 
     public void enroll (String[] commandParts) throws ProgramException, StudentException {
-            int facultyNumber = Integer.parseInt(commandParts[1]);
-            //Checking if student with this faculty number is already enrolled
-            boolean doesStudentExist = students.stream()
-                    .anyMatch(std -> std.getFacultyNumber() == facultyNumber);
-            if(doesStudentExist) {
-                throw new IllegalArgumentException(UserMessages.STUDENT_EXISTS.message);
-            }
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        //Checking if student with this faculty number is already enrolled
+        boolean doesStudentExist = students.stream()
+                .anyMatch(std -> std.getFacultyNumber() == facultyNumber);
+        if(doesStudentExist) {
+            throw new IllegalArgumentException(UserMessages.STUDENT_EXISTS.message);
+        }
 
-            String programName = commandParts[2];
-            //Checking if the given program exists in the programs database
-            boolean doesProgramExists = programs.stream()
-                    .anyMatch(element -> element.getName().equalsIgnoreCase(programName));
-            if(!doesProgramExists) {
-                throw new IllegalArgumentException(UserMessages.PROGRAM_NOT_FOUND.message);
-            }
+        String programName = commandParts[2];
+        //Checking if the given program exists in the programs database
+        boolean doesProgramExists = programs.stream()
+                .anyMatch(element -> element.getName().equalsIgnoreCase(programName));
+        if(!doesProgramExists) {
+            throw new IllegalArgumentException(UserMessages.PROGRAM_NOT_FOUND.message);
+        }
 
-            Program studentProgram = new Program(programName);
+        Program studentProgram = new Program(programName);
 
-            int group = Integer.parseInt(commandParts[3]);
-            String studentName = commandParts[4];
-            int year = 1;
+        int group = Integer.parseInt(commandParts[3]);
+        String studentName = commandParts[4];
+        int year = 1;
 
-            Student newStudent = new Student(studentName, facultyNumber, studentProgram, year, group);
-            newStudent.setStatus("enrolled");
+        Student newStudent = new Student(studentName, facultyNumber, studentProgram, year, group);
+        newStudent.setStatus("enrolled");
 
-            students.add(newStudent);
-            System.out.println(String.format("Successfully enrolled student %s with faculty number %d in group %d of program %s.", studentName, facultyNumber, group, programName));
+        students.add(newStudent);
+        System.out.println(String.format("Successfully enrolled student %s with faculty number %d in group %d of program %s.", studentName, facultyNumber, group, programName));
 
     }
 
@@ -110,7 +110,7 @@ public class StudentService implements Reportable {
                         .collect(Collectors.toList());
 
                 checkMandatorySubjectsGrades(gradesBySubject, mandatorySubjects);
-                    student.setProgram(program);
+                student.setProgram(program);
                 System.out.println(String.format("Successfully changed student %d program to %s.", facultyNumber, value));
 
             } else if (option.equalsIgnoreCase("group")) {
@@ -224,14 +224,6 @@ public class StudentService implements Reportable {
         studentGradesBySubject.put(subject, grade);
         System.out.println(String.format("Successfully added grade %f for course %s in student %d record", grade, subjectName, facultyNumber));
     }
-
-    /*private boolean checkCommandPartsLength(String[] parts, int count) {
-        if (parts.length != count) {
-            throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
-        }
-
-        return true;
-    }*/
 
     private Student findStudentByFn (int facultyNumber) {
         Student student = students.stream()

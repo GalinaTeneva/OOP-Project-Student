@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.*;
 
 public class FileManager<T> {
-    private String currentFilePath;
+    //private String currentFilePath;
     private CustomSerializable<T> serializableService;
     private CustomDeserializable<T> deserializableService;
     private Collection<T> objectCollection;
@@ -27,7 +27,7 @@ public class FileManager<T> {
     }
 
     public void open (String filePath) throws IOException, DeserializationException {
-        this.currentFilePath = filePath;
+        //this.currentFilePath = filePath;
         File file = new File(filePath);
 
         if (!file.exists()) {
@@ -51,16 +51,16 @@ public class FileManager<T> {
     }
 
     public void close() {
-        this.currentFilePath = null;
+        //this.currentFilePath = null;
         objectCollection.clear();
     }
 
-    public void save() throws IOException {
-        if (currentFilePath == null) {
+    public void save(String filePath) throws IOException {
+        /*if (currentFilePath == null) {
             throw new IllegalStateException("No file is currently open");
-        }
+        }*/
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentFilePath))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (T object : objectCollection) {
                 String line = serializableService.serialize(object);
                 writer.write(line);
@@ -70,7 +70,7 @@ public class FileManager<T> {
     }
 
     public void saveAs(String filePath) throws IOException {
-        this.currentFilePath = filePath;
-        save();
+        //this.currentFilePath = filePath;
+        save(filePath);
     }
 }
