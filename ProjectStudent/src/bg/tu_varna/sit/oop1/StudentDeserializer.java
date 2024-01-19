@@ -21,21 +21,22 @@ public class StudentDeserializer implements CustomDeserializable<Student> {
                 throw new DeserializationException(UserMessages.WRONG_STUDENT_DATA_FORMAT.message);
             }
 
-            String name = parts[0];
-            int facultyNumber = Integer.parseInt(parts[1]);
-            Program program = new Program(parts[2]);
-            int year = Integer.parseInt(parts[3]);
-            int group = Integer.parseInt(parts[4]);
-            String status = parts[5];
+            String name = parts[0].split(": ")[1];
+            int facultyNumber = Integer.parseInt(parts[1].split(": ")[1]);
+            Program program = new Program(parts[2].split(": ")[1]);
+            int year = Integer.parseInt(parts[3].split(": ")[1]);
+            int group = Integer.parseInt(parts[4].split(": ")[1]);
+            String status = parts[5].split(": ")[1];
 
             Student student = new Student(name, facultyNumber, program, year, group);
             student.setStatus(status);
 
             if (parts.length > 6) {
                 Map<Subject, Double> gradesBySubject = new HashMap<>();
-                String[] gradeParts = parts[6].split("; ");
-                for (String gradePart : gradeParts) {
-                    String[] gradeSplit = gradePart.split(" -> ");
+                String[] gradeParts = parts[6].split(": ");
+                String[] allGrades = gradeParts[1].split("; ");
+                for (String gradeInfo : allGrades) {
+                    String[] gradeSplit = gradeInfo.split(" -> ");
                     String subjectName = gradeSplit[0];
                     String subjectType = gradeSplit[1];
                     Subject subject = new Subject(subjectName, subjectType);

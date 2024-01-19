@@ -12,15 +12,16 @@ public class StudentSerializer implements CustomSerializable<Student>{
     public String serialize(Student student) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(student.getName()).append(" | ");
-        sb.append(student.getFacultyNumber()).append(" | ");
-        sb.append(student.getProgram() != null ? student.getProgram().getName() : "null").append(" | ");
-        sb.append(student.getYear()).append(" | ");
-        sb.append(student.getGroup()).append(" | ");
-        sb.append(student.getStatus().toString());
+        sb.append("Name: ").append(student.getName()).append(" | ");
+        sb.append("Faculty number: ").append(student.getFacultyNumber()).append(" | ");
+        sb.append("Program: ").append(student.getProgram() != null ? student.getProgram().getName() : "null").append(" | ");
+        sb.append("Year: ").append(student.getYear()).append(" | ");
+        sb.append("Group: ").append(student.getGroup()).append(" | ");
+        sb.append("Status: ").append(student.getStatus().toString());
 
         if (student.getGradesBySubject() != null && !student.getGradesBySubject().isEmpty()) {
             sb.append(" | ");
+            sb.append("Grades: ");
             StringBuilder gradesStringBuilder = new StringBuilder();
 
             for (Map.Entry<Subject, Double> entry : student.getGradesBySubject().entrySet()) {

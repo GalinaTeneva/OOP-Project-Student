@@ -9,7 +9,7 @@ import bg.tu_varna.sit.oop1.models.Subject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StudentService implements Reportable {
+public class StudentService {
     private Collection<Student> students;
     private Collection<Program> programs;
 
@@ -24,30 +24,6 @@ public class StudentService implements Reportable {
 
     public Collection<Program> getPrograms(){
         return this.programs;
-    }
-
-    //TODO: Try to move the reportable methods into new class StudentReportables which implements Reportable.
-    //TODO: Add an instance if class StudentReportables ij StudentServices. This instance will call the methods of class StudentReportables
-
-    //Reportable methods
-    @Override
-    public void print(String[] commandParts) {
-
-    }
-
-    @Override
-    public void printAll(String[] commandParts) {
-
-    }
-
-    @Override
-    public void protocol(String[] commandParts) {
-
-    }
-
-    @Override
-    public void report(String[] commandParts) {
-
     }
 
     public void enroll (String[] commandParts) throws ProgramException, StudentException {

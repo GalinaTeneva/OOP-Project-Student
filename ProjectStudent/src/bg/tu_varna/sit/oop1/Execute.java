@@ -23,6 +23,8 @@ public class Execute {
     private ProgramDeserializer programDeserializer;
     private FileManager programFileManager;
 
+    private StudentReporter studentReporter;
+
     public Execute() {
         this.studentSerializer = new StudentSerializer();
         this.studentDeserializer = new StudentDeserializer();
@@ -30,6 +32,7 @@ public class Execute {
         this.students = studentService.getStudents();
         this.programs = studentService.getPrograms();
         this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, students);
+        this.studentReporter = new StudentReporter(students);
         this.scanner = scanner = new Scanner(System.in);
 
         this.programDeserializer = new ProgramDeserializer();
@@ -158,6 +161,25 @@ public class Execute {
                         necessaryCommandParts = 4;
                         if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
                             studentService.addGrade(commandParts);
+                        }
+                        break;
+                        //report commands
+                    case "PRINT":
+                        necessaryCommandParts = 2;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentReporter.print(commandParts);
+                        }
+                        break;
+                    case "PRINTALL":
+                        necessaryCommandParts = 3;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentReporter.printAll(commandParts);
+                        }
+                        break;
+                    case "PROTOCOL":
+                        necessaryCommandParts = 2;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentReporter.protocol(commandParts);
                         }
                         break;
                 }
