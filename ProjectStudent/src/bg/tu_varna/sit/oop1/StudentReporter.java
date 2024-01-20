@@ -17,24 +17,29 @@ public class StudentReporter implements Reportable{
 
     @Override
     public void print(String[] commandParts) {
-        int facultyNumber = Integer.parseInt(commandParts[1]);
-        Student student = findStudentByFn(facultyNumber);
-        String studentReport = serializer.serialize(student);
+        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        Student student = findStudentByFn(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        String studentReport = serializer.serialize(student); //Serializes student
         System.out.println(studentReport);
     }
 
     @Override
     public void printAll(String[] commandParts) {
         String programName = commandParts[1];
-        //TODO: invalid program exception;
+        //Throwing exception if program name is number
+        if(isNumber(programName)){
+            throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, programName));
+        }
 
-        int year = Integer.parseInt(commandParts[2]);
+        int year = intParser(commandParts[2]); //Parses if possible and throws exception if not
 
+        //returns all students which properties match the given program and year
         List<Student> filteredStudents = students.stream()
                 .filter(student -> student.getYear() == year)
                 .filter(student -> student.getProgram().getName().equals(programName))
                 .collect(Collectors.toList());
 
+        //Serializes each item from the collection above and prints the result
         for (Student student : filteredStudents) {
             String studentReport = serializer.serialize(student);
             System.out.println(studentReport);
@@ -44,60 +49,94 @@ public class StudentReporter implements Reportable{
     @Override
     public void protocol(String[] commandParts) {
         String subjectName = commandParts[1];
+        //Throwing exception if subject name is number
+        if(isNumber(subjectName)){
+            throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, subjectName));
+        }
 
-        //TODO: invalid subject exception;
+        //TODO: Check if the given subject is a valid subject;
 
-        System.out.println(">>>>>Program report by course:");
+        System.out.println(">>>>>Program report by course<<<<<");
         printSubjectsByProgram(subjectName);
         System.out.println();
-        System.out.println(">>>>>Program report by year:");
+        System.out.println(">>>>>Program report by year<<<<<");
         printSubjectsByYear(subjectName);
     }
 
     @Override
     public void report(String[] commandParts) {
-        int facultyNumber = Integer.parseInt(commandParts[1]);
-        Student student = findStudentByFn(facultyNumber);
+        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        Student student = findStudentByFn(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
-        printTakenSubjects(student);
+        Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
+        if (studentGradesBySubject.size() == 0) {
+            System.out.println(String.format("Student %d has no grades yet.", facultyNumber));
+            return;
+        }
 
-        printFailedSubjects(student);
-
-        //TODO: Finish the method's logic!!
+        String takenExams = takenExamsInfo(student);
+        String failedExams = failedExamsInfo(student);
+        String fullExamReport = generateFullExamReport(student, takenExams, failedExams);
+        System.out.println(fullExamReport);
     }
 
-    private void printFailedSubjects(Student student) {
-        StringBuilder sb = new StringBuilder();
-
+    private String failedExamsInfo(Student student) {
         Map<Subject, Double> subjectsFailed = student.getGradesBySubject().entrySet().stream()
                 .filter(entry -> entry.getValue() < 3.00)
                 .collect(Collectors.toMap(
                         entry -> entry.getKey(),
                         entry -> entry.getValue()));
-
-        for (Map.Entry<Subject, Double> entry : subjectsFailed.entrySet()) {
-            sb.append("Subject: ").append(entry.getKey().getName());
-            sb.append(entry.getValue());
+        if(subjectsFailed.isEmpty()) {
+            return "The student has no failed exams.";
         }
 
-        System.out.println(sb);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Failed exams: ").append(System.lineSeparator());
+        for (Map.Entry<Subject, Double> entry : subjectsFailed.entrySet()) {
+            sb.append(entry.getKey().getName());
+            sb.append(" - ").append(entry.getValue()).append(System.lineSeparator());
+        }
+
+        return sb.toString();
     }
 
-    private void printTakenSubjects(Student student) {
-        StringBuilder sb = new StringBuilder();
-
+    private String takenExamsInfo(Student student) {
         Map<Subject, Double> subjectsTaken = student.getGradesBySubject().entrySet().stream()
-                .filter(entry -> entry.getValue() > 3.00)
+                .filter(entry -> entry.getValue() >= 3.00)
                 .collect(Collectors.toMap(
                         entry -> entry.getKey(),
                         entry -> entry.getValue()));
-
-        for (Map.Entry<Subject, Double> entry : subjectsTaken.entrySet()) {
-            sb.append("Subject: ").append(entry.getKey().getName());
-            sb.append(entry.getValue());
+        if(subjectsTaken.isEmpty()) {
+            return "The student has failed all the exams.";
         }
 
-        System.out.println(sb);
+        student.setAverageGrade(); //Calculates average grade
+        String averageGrade = student.getAverageGrade();
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Taken exams: ").append(System.lineSeparator());
+        for (Map.Entry<Subject, Double> entry : subjectsTaken.entrySet()) {
+            sb.append(entry.getKey().getName()).append(" - ").append(entry.getValue()).append(System.lineSeparator());
+        }
+        sb.append(String.format("Average grade is: %s",averageGrade));
+
+        return sb.toString();
+    }
+
+    public String generateFullExamReport (Student student, String takenExams, String failedExams) {
+        int facultyNumber = student.getFacultyNumber();
+        String studentName = student.getName();
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(">>>>>>>>>>STUDENT GRADES REPORT<<<<<<<<<<").append(System.lineSeparator());
+        sb.append("----------------------------------------------").append(System.lineSeparator());
+        sb.append("Student ").append(facultyNumber).append(" - ").append(studentName).append(System.lineSeparator());
+        sb.append(takenExams).append(System.lineSeparator());
+        sb.append(failedExams);
+
+        return sb.toString();
     }
 
     private Student findStudentByFn (int facultyNumber) {
@@ -147,5 +186,21 @@ public class StudentReporter implements Reportable{
             //System.out.println(sb);
         }
         System.out.print(sb);
+    }
+
+    private boolean isNumber (String value) {
+        String pattern = "\\d+(.\\d+)?";
+        return value.matches(pattern);
+    }
+
+    private int intParser (String value) {
+        //Checking if the value can be parsed
+        boolean isNumber = isNumber(value);
+        //Exception if  the value can not be parsed
+        if (!isNumber) {
+            throw new NumberFormatException(String.format(UserMessages.WRONG_NUMBER_DATA.message, value));
+        }
+
+        return Integer.parseInt(value);
     }
 }

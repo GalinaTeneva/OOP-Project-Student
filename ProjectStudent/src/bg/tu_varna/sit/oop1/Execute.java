@@ -3,15 +3,15 @@ package bg.tu_varna.sit.oop1;
 import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
 
+import java.io.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Scanner;
 
 public class Execute {
-    //TODO:Add method help!
-    //TODO: Check if the serializer and the deserializer are working correctly - test with file open and file save
-
+    //TODO: Add comments explaining the logic in the class
     private String pathToProgramsDatabaseFile = "D:\\UserData\\Desktop\\ProgramsData.txt";
+    private String pathToFileHelp = "D:\\UserData\\Desktop\\help.txt";
 
     private Scanner scanner;
     private StudentSerializer studentSerializer;
@@ -34,7 +34,7 @@ public class Execute {
         this.programs = studentService.getPrograms();
         this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, students);
         this.studentReporter = new StudentReporter(students);
-        this.scanner = scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in);
 
         this.programDeserializer = new ProgramDeserializer();
         this.programFileManager = new FileManager(programDeserializer, programs);
@@ -67,16 +67,37 @@ public class Execute {
                 return;
             }
 
+            if (command.equals("HELP")) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(pathToFileHelp))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                } catch (IOException e) {
+                    //e.printStackTrace();
+                    System.out.println("An error occurred while reading the file.");
+                }
+
+                continue;
+            }
+
             try {
                 if(command.equals("OPEN") && !isFileLoaded) {
                     necessaryCommandParts = 2;
                     if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-                        studentsFileManager.open(commandParts[1]);
+                        boolean isDirExists = validateDirectory(commandParts[1]);
+                        if(!isDirExists){
+                            System.out.println("Invalid path");
+                            continue;
+                        }
+
+                        filePath = commandParts[1];
+                        fileName = getFileName(filePath);
+
+                        studentsFileManager.open(filePath);
                         programFileManager.open(pathToProgramsDatabaseFile);
                     }
 
-                    filePath = commandParts[1];
-                    fileName = getFileName(filePath);
                     System.out.println("Successfully opened " + fileName);
                     isFileLoaded = true;
                     continue;
@@ -196,6 +217,25 @@ public class Execute {
         }
     }
 
+    private boolean validateDirectory(String path) {
+        StringBuilder sb = new StringBuilder();
+        String[] filePathParts = path.split("\\\\");
+
+        for (int i = 0; i < filePathParts.length - 2; i++) {
+            sb.append(filePathParts[i]).append("\\");
+        }
+
+        File directory = new File(sb.toString());
+
+        // Check if the directory already exists
+        if (/*directory.exists() && */directory.isDirectory()) {
+            return true; // The directory exists
+        } else {
+            // Try to create the directory
+            return false;
+        }
+    }
+
     private boolean checkCommandPartsLength(String[] parts, int count) {
         if (parts.length != count) {
             throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
@@ -204,8 +244,8 @@ public class Execute {
         return true;
     }
 
-    private String getFileName(String text) {
-        String[] filePathParts = text.split("\\\\");
+    private String getFileName(String path) {
+        String[] filePathParts = path.split("\\\\");
         String fileName = filePathParts[filePathParts.length - 1];
         return  fileName;
     }

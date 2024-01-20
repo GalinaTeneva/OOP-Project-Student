@@ -237,7 +237,7 @@ public class StudentService {
         }
 
         studentGradesBySubject.put(subject, grade);
-        System.out.println(String.format("Successfully added grade %f for course %s in student %d record", grade, subjectName, facultyNumber));
+        System.out.println(String.format("Successfully added grade %.2f for course %s in student %d record.", grade, subjectName, facultyNumber));
     }
 
     private Student findStudentByFn (int facultyNumber) {
