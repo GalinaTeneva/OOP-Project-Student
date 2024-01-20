@@ -1,6 +1,7 @@
 package bg.tu_varna.sit.oop1;
 
 import bg.tu_varna.sit.oop1.models.Student;
+import bg.tu_varna.sit.oop1.models.Subject;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,6 +26,8 @@ public class StudentReporter implements Reportable{
     @Override
     public void printAll(String[] commandParts) {
         String programName = commandParts[1];
+        //TODO: invalid program exception;
+
         int year = Integer.parseInt(commandParts[2]);
 
         List<Student> filteredStudents = students.stream()
@@ -42,7 +45,7 @@ public class StudentReporter implements Reportable{
     public void protocol(String[] commandParts) {
         String subjectName = commandParts[1];
 
-        //TODO: no subject exception;
+        //TODO: invalid subject exception;
 
         System.out.println(">>>>>Program report by course:");
         printSubjectsByProgram(subjectName);
@@ -53,7 +56,48 @@ public class StudentReporter implements Reportable{
 
     @Override
     public void report(String[] commandParts) {
+        int facultyNumber = Integer.parseInt(commandParts[1]);
+        Student student = findStudentByFn(facultyNumber);
 
+        printTakenSubjects(student);
+
+        printFailedSubjects(student);
+
+        //TODO: Finish the method's logic!!
+    }
+
+    private void printFailedSubjects(Student student) {
+        StringBuilder sb = new StringBuilder();
+
+        Map<Subject, Double> subjectsFailed = student.getGradesBySubject().entrySet().stream()
+                .filter(entry -> entry.getValue() < 3.00)
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey(),
+                        entry -> entry.getValue()));
+
+        for (Map.Entry<Subject, Double> entry : subjectsFailed.entrySet()) {
+            sb.append("Subject: ").append(entry.getKey().getName());
+            sb.append(entry.getValue());
+        }
+
+        System.out.println(sb);
+    }
+
+    private void printTakenSubjects(Student student) {
+        StringBuilder sb = new StringBuilder();
+
+        Map<Subject, Double> subjectsTaken = student.getGradesBySubject().entrySet().stream()
+                .filter(entry -> entry.getValue() > 3.00)
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey(),
+                        entry -> entry.getValue()));
+
+        for (Map.Entry<Subject, Double> entry : subjectsTaken.entrySet()) {
+            sb.append("Subject: ").append(entry.getKey().getName());
+            sb.append(entry.getValue());
+        }
+
+        System.out.println(sb);
     }
 
     private Student findStudentByFn (int facultyNumber) {

@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Execute {
     //TODO:Add method help!
+    //TODO: Check if the serializer and the deserializer are working correctly - test with file open and file save
 
     private String pathToProgramsDatabaseFile = "D:\\UserData\\Desktop\\ProgramsData.txt";
 
@@ -180,6 +181,12 @@ public class Execute {
                         necessaryCommandParts = 2;
                         if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
                             studentReporter.protocol(commandParts);
+                        }
+                        break;
+                    case "REPORT":
+                        necessaryCommandParts = 2;
+                        if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
+                            studentReporter.report(commandParts);
                         }
                         break;
                 }

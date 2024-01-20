@@ -43,7 +43,9 @@ public enum UserMessages {
     WRONG_ARGUMENTS_COUNT("Invalid number of arguments."),
     EXIT("Exiting..."),
     FILE_NOT_LOADED("File not opened."),
-    STUDENT_STATUS_CHANGED("Successfully changed student %d status.");
+    STUDENT_STATUS_CHANGED("Successfully changed student %d status."),
+    WRONG_NUMBER_DATA("The value \"%s\" must be a number"),
+    WRONG_STRING_DATA("The value \"%s\" can not be a number");
 
     public final String message;
 
