@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The {@code Student} class represents a student with attributes name, faculty number,
+ * The Student class represents a student with attributes name, faculty number,
  * program, year, group, status. It also maintains a record of the student's grades and an attribute average grade
  */
 public class Student {
