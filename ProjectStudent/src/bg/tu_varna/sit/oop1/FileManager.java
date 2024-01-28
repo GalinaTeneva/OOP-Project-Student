@@ -1,33 +1,27 @@
 package bg.tu_varna.sit.oop1;
 
-import bg.tu_varna.sit.oop1.exceptions.DeserializationException;
-import bg.tu_varna.sit.oop1.exceptions.ProgramException;
-import bg.tu_varna.sit.oop1.exceptions.StudentException;
-import bg.tu_varna.sit.oop1.exceptions.SubjectException;
 import bg.tu_varna.sit.oop1.interfaces.CustomDeserializable;
 import bg.tu_varna.sit.oop1.interfaces.CustomSerializable;
+import bg.tu_varna.sit.oop1.repositories.Repository;
 
 import java.io.*;
-import java.util.*;
 
 public class FileManager<T> {
-    //private String currentFilePath;
     private CustomSerializable<T> serializableService;
     private CustomDeserializable<T> deserializableService;
-    private Collection<T> objectCollection;
+    private Repository<T> repository;
 
-    public FileManager(CustomDeserializable<T> deserializableService, Collection<T> objectCollection) {
-        this(null, deserializableService, objectCollection);
+    public FileManager(CustomDeserializable<T> deserializableService, Repository<T> repository) {
+        this(null, deserializableService, repository);
     }
 
-    public FileManager(CustomSerializable<T> serializableService, CustomDeserializable<T> deserializableService, Collection<T> objectCollection) {
+    public FileManager(CustomSerializable<T> serializableService, CustomDeserializable<T> deserializableService, Repository<T> repository) {
         this.serializableService = serializableService;
         this.deserializableService = deserializableService;
-        this.objectCollection = objectCollection;
+        this.repository = repository;
     }
 
-    public void open (String filePath) throws IOException, DeserializationException {
-        //this.currentFilePath = filePath;
+    public void open (String filePath) throws IOException {
         File file = new File(filePath);
 
         if (!file.exists()) {
@@ -39,29 +33,20 @@ public class FileManager<T> {
             String line;
             while ((line = reader.readLine()) != null) {
                 T object = deserializableService.deserialize(line);
-                objectCollection.add(object);
+                repository.addNew(object);
             }
-        } catch (StudentException e) {
-            e.printStackTrace();
-        } catch (SubjectException e) {
-            e.printStackTrace();
-        } catch (ProgramException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void close() {
-        //this.currentFilePath = null;
-        objectCollection.clear();
+        repository.clear();
     }
 
     public void save(String filePath) throws IOException {
-        /*if (currentFilePath == null) {
-            throw new IllegalStateException("No file is currently open");
-        }*/
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (T object : objectCollection) {
+            for (T object : repository.getAll()) {
                 String line = serializableService.serialize(object);
                 writer.write(line);
                 writer.newLine();
@@ -70,7 +55,6 @@ public class FileManager<T> {
     }
 
     public void saveAs(String filePath) throws IOException {
-        //this.currentFilePath = filePath;
         save(filePath);
     }
 }

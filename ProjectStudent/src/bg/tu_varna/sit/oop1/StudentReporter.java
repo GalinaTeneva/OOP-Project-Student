@@ -1,24 +1,26 @@
 package bg.tu_varna.sit.oop1;
 
+import bg.tu_varna.sit.oop1.interfaces.Reportable;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
+import bg.tu_varna.sit.oop1.repositories.Repository;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StudentReporter implements Reportable{
+public class StudentReporter implements Reportable {
     private StudentSerializer serializer;
-    private Collection<Student> students;
+    private Repository<Student> studentRepository;
 
-    public StudentReporter (Collection<Student> students) {
-        this.students = students;
+    public StudentReporter (Repository<Student> studentRepository) {
+        this.studentRepository = studentRepository;
         this.serializer = new StudentSerializer();
     }
 
     @Override
     public void print(String[] commandParts) {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
-        Student student = findStudentByFn(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         String studentReport = serializer.serialize(student); //Serializes student
         System.out.println(studentReport);
     }
@@ -34,7 +36,7 @@ public class StudentReporter implements Reportable{
         int year = intParser(commandParts[2]); //Parses if possible and throws exception if not
 
         //returns all students which properties match the given program and year
-        List<Student> filteredStudents = students.stream()
+        List<Student> filteredStudents = studentRepository.getAll().stream()
                 .filter(student -> student.getYear() == year)
                 .filter(student -> student.getProgram().getName().equals(programName))
                 .collect(Collectors.toList());
@@ -66,7 +68,7 @@ public class StudentReporter implements Reportable{
     @Override
     public void report(String[] commandParts) {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
-        Student student = findStudentByFn(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
         Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
         if (studentGradesBySubject.size() == 0) {
@@ -139,16 +141,11 @@ public class StudentReporter implements Reportable{
         return sb.toString();
     }
 
-    private Student findStudentByFn (int facultyNumber) {
-        Student student = students.stream()
-                .filter(std -> std.getFacultyNumber() == facultyNumber)
-                .findFirst()
-                .orElse(null);
-
+    private Student getStudentOrThrow(int facultyNumber) throws IllegalArgumentException {
+        Student student = studentRepository.findById(facultyNumber);
         if (student == null) {
             throw new IllegalArgumentException(UserMessages.STUDENT_NOT_EXISTS.message);
         }
-
         return student;
     }
 
@@ -156,7 +153,7 @@ public class StudentReporter implements Reportable{
         StringBuilder sb = new StringBuilder();
 
 
-        List<Student> programFilteredStudents = students.stream()
+        List<Student> programFilteredStudents = studentRepository.getAll().stream()
                 .filter(student -> student.getGradesBySubject().keySet().stream()
                         .anyMatch(subject -> subject.getName().equalsIgnoreCase(subjectName)))
                 .sorted(Comparator.comparing((Student student) -> student.getProgram().getName())
@@ -173,7 +170,7 @@ public class StudentReporter implements Reportable{
     private void printSubjectsByYear (String subjectName) {
         StringBuilder sb = new StringBuilder();
 
-        List<Student> yearFilteredStudents = students.stream()
+        List<Student> yearFilteredStudents = studentRepository.getAll().stream()
                 .filter(student -> student.getGradesBySubject().keySet().stream()
                         .anyMatch(subject -> subject.getName().equalsIgnoreCase(subjectName)))
                 .sorted(Comparator.comparing((Student student) -> student.getYear())

@@ -1,10 +1,9 @@
 package bg.tu_varna.sit.oop1;
 
-import bg.tu_varna.sit.oop1.models.Program;
-import bg.tu_varna.sit.oop1.models.Student;
+import bg.tu_varna.sit.oop1.repositories.ProgramRepository;
+import bg.tu_varna.sit.oop1.repositories.StudentRepository;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -18,26 +17,29 @@ public class Execute {
     private StudentDeserializer studentDeserializer;
     private StudentService studentService;
     private FileManager studentsFileManager;
-    private Collection<Student> students;
 
-    private Collection<Program> programs;
     private ProgramDeserializer programDeserializer;
     private FileManager programFileManager;
 
     private StudentReporter studentReporter;
+    private StudentRepository studentRepository; //new edit
+    private ProgramRepository programRepository; //new edit
 
     public Execute() {
+
+        this.studentRepository = new StudentRepository(); //new edit
+        this.programRepository = new ProgramRepository(); //new edit
+
         this.studentSerializer = new StudentSerializer();
         this.studentDeserializer = new StudentDeserializer();
-        this.studentService = new StudentService();
-        this.students = studentService.getStudents();
-        this.programs = studentService.getPrograms();
-        this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, students);
-        this.studentReporter = new StudentReporter(students);
+        this.studentService = new StudentService(studentRepository, programRepository);
+
+        this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, studentRepository);
+        this.studentReporter = new StudentReporter(studentRepository);
         this.scanner = new Scanner(System.in);
 
         this.programDeserializer = new ProgramDeserializer();
-        this.programFileManager = new FileManager(programDeserializer, programs);
+        this.programFileManager = new FileManager(programDeserializer, programRepository);
     }
 
     public void runProject() {
