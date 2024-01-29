@@ -12,10 +12,10 @@ public enum StudentStatus {
     /**
      * Indicates that the student has interrupted the education program.
      */
-    DROPPED, //прекъснал
+    DROPPED,
 
     /**
      * Indicates that the student has successfully completed the whole program.
      */
-    GRADUATED //завършил
+    GRADUATED
 }

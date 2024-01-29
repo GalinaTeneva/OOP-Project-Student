@@ -21,7 +21,7 @@ public class StudentService {
     }
 
     public void enroll (String[] commandParts) throws StudentException {
-        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
 
         //Checking if student with this faculty number is already enrolled and Exception if the student already is in the database
         boolean isInDatabase = studentRepository.getAll().stream()
@@ -32,17 +32,17 @@ public class StudentService {
 
         String programName = commandParts[2];
         //Throwing exception if program name is number
-        if(isNumber(programName)){
+        if(CommonFunctions.isNumber(programName)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, programName));
         }
 
         Program program = programRepository.getOrThrow(programName); //Exception if the program doesn't exist in the program database;
 
-        int group = intParser(commandParts[3]); //Parses if possible and throws exception if not
+        int group = CommonFunctions.intParser(commandParts[3]); //Parses if possible and throws exception if not
 
         String studentName = commandParts[4];
         //Throwing exception if student name is number
-        if(isNumber(studentName)){
+        if(CommonFunctions.isNumber(studentName)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, studentName));
         }
         int year = 1; //All students start from the first year of study when enrolled
@@ -56,7 +56,7 @@ public class StudentService {
     }
 
     public void advance(String[] commandParts) throws StudentException {
-        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
 
         Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
@@ -65,12 +65,12 @@ public class StudentService {
     }
 
     public void change(String[] commandParts) throws Exception {
-        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
         String option = commandParts[2];
         String value = commandParts[3];
 
         //Throwing exception if option is number
-        if(isNumber(option)){
+        if(CommonFunctions.isNumber(option)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, option));
         }
 
@@ -82,7 +82,7 @@ public class StudentService {
 
             if (option.equalsIgnoreCase("program")) {
                 //Throwing exception if program name is number
-                if(isNumber(value)){
+                if(CommonFunctions.isNumber(value)){
                     throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, value));
                 }
 
@@ -101,11 +101,11 @@ public class StudentService {
                 System.out.println(String.format("Successfully changed student %d program to %s.", facultyNumber, value));
 
             } else if (option.equalsIgnoreCase("group")) {
-                student.setGroup(intParser(value)); //Sets the parsed value if possible and throws exception if not
+                student.setGroup(CommonFunctions.intParser(value)); //Sets the parsed value if possible and throws exception if not
                 System.out.println(String.format("Successfully changed student %d group to %s.", facultyNumber, value));
 
             } else if (option.equalsIgnoreCase("year")) {
-                int newYear = intParser(value); //Parses if possible and throws exception if not
+                int newYear = CommonFunctions.intParser(value); //Parses if possible and throws exception if not
                 //Throws exception if new year in not in the range [1-4]
                 if (newYear == currentYear || newYear > currentYear + 1 || newYear < currentYear + 1) {
                     throw new IllegalArgumentException(UserMessages.NEW_STUDENT_YEAR_WRONG_VALUE.message);
@@ -126,7 +126,7 @@ public class StudentService {
     }
 
     public void graduate(String[] commandParts) throws StudentException {
-        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
         Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
         Map<Subject, Double> studentGrades = student.getGradesBySubject();
@@ -145,24 +145,24 @@ public class StudentService {
     }
 
     public void interrupt(String[] commandParts) throws StudentException {
-        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
         Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         student.setStatus("dropped");
         System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
     }
 
     public void resume(String[] commandParts) throws StudentException {
-        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
         Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         student.setStatus("enrolled");
         System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
     }
 
     public void enrollIn(String[] commandParts) {
-        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
         String subjectName = commandParts[2];
         //Throwing exception if subject name is number
-        if(isNumber(subjectName)){
+        if(CommonFunctions.isNumber(subjectName)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, subjectName));
         }
 
@@ -190,14 +190,14 @@ public class StudentService {
     }
 
     public void addGrade(String[] commandParts) throws StudentException {
-        int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
         String subjectName = commandParts[2];
         //Throwing exception if subject name is number
-        if(isNumber(subjectName)){
+        if(CommonFunctions.isNumber(subjectName)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, subjectName));
         }
 
-        double grade = doubleParser(commandParts[3]); //Parses if possible and throws exception if not
+        double grade = CommonFunctions.doubleParser(commandParts[3]); //Parses if possible and throws exception if not
 
         if (grade < 2.00 || grade > 6.00) {
             throw new StudentException(UserMessages.GRADE_WRONG_VALUE.message);
@@ -262,32 +262,5 @@ public class StudentService {
         }
 
         return true;
-    }
-
-    private boolean isNumber (String value) {
-        String pattern = "\\d+(.\\d+)?";
-        return value.matches(pattern);
-    }
-
-    private int intParser (String value) {
-        //Checking if the value can be parsed
-        boolean isNumber = isNumber(value);
-        //Exception if  the value can not be parsed
-        if (!isNumber) {
-            throw new NumberFormatException(String.format(UserMessages.WRONG_NUMBER_DATA.message, value));
-        }
-
-        return Integer.parseInt(value);
-    }
-
-    private double doubleParser (String value) {
-        //Checking if the value can be parsed
-        boolean isNumber = isNumber(value);
-        //Exception if  the value can not be parsed
-        if (!isNumber) {
-            throw new NumberFormatException(String.format(UserMessages.WRONG_NUMBER_DATA.message, value));
-        }
-
-        return Double.parseDouble(value);
     }
 }
