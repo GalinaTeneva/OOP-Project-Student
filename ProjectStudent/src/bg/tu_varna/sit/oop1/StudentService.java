@@ -22,35 +22,16 @@ public class StudentService {
 
     public void enroll (String[] commandParts) throws StudentException {
         int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
-
-        //Checking if student with this faculty number is already enrolled and Exception if the student already is in the database
-        boolean isInDatabase = studentRepository.getAll().stream()
-                .anyMatch(student -> student.getFacultyNumber() == facultyNumber);
-        if(isInDatabase) {
-            throw new IllegalArgumentException(UserMessages.STUDENT_EXISTS.message);
-        }
-
         String programName = commandParts[2];
-        //Throwing exception if program name is number
-        if(CommonFunctions.isNumber(programName)){
-            throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, programName));
-        }
-
-        Program program = programRepository.getOrThrow(programName); //Exception if the program doesn't exist in the program database;
-
         int group = CommonFunctions.intParser(commandParts[3]); //Parses if possible and throws exception if not
-
         String studentName = commandParts[4];
-        //Throwing exception if student name is number
-        if(CommonFunctions.isNumber(studentName)){
-            throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, studentName));
-        }
         int year = 1; //All students start from the first year of study when enrolled
 
-        Student newStudent = new Student(studentName, facultyNumber, program, year, group);
+        Student newStudent = generateStudentOrThrow(facultyNumber, studentName, programName, year, group);
         newStudent.setStatus("enrolled"); //Student status is always "enrolled" when first added;
 
         studentRepository.addNew(newStudent);
+
         System.out.println(String.format("Successfully enrolled student %s with faculty number %d in group %d of program %s.",
                 studentName, facultyNumber, group, programName));
     }
@@ -227,7 +208,8 @@ public class StudentService {
         System.out.println(String.format("Successfully added grade %.2f for course %s in student %d record.", grade, subjectName, facultyNumber));
     }
 
-    private void checkMandatorySubjectsGrades(Map<Subject, Double> gradesBySubject, Collection<Subject> mandatorySubjects) throws Exception {
+    private void checkMandatorySubjectsGrades(Map<Subject, Double> gradesBySubject, Collection<Subject> mandatorySubjects)
+            throws Exception {
         //Exception if there is no grade for a mandatory subject or is below 3.00
         for (Subject subject : mandatorySubjects) {
             Double grade = gradesBySubject.get(subject);
@@ -262,5 +244,30 @@ public class StudentService {
         }
 
         return true;
+    }
+
+    private Student generateStudentOrThrow(int facultyNumber, String studentName, String programName, int year, int group)
+            throws StudentException {
+        //Checking if student with this faculty number is already enrolled
+        boolean isInDatabase = studentRepository.getAll().stream()
+                .anyMatch(student -> student.getFacultyNumber() == facultyNumber);
+        //Exception if the student already is in the database
+        if(isInDatabase) {
+            throw new IllegalArgumentException(UserMessages.STUDENT_EXISTS.message);
+        }
+
+        //Exception if programName is number
+        if(CommonFunctions.isNumber(programName)){
+            throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, programName));
+        }
+        //Exception if the program doesn't exist in the program database;
+        Program program = programRepository.getOrThrow(programName);
+
+        //Exception if student name is number
+        if(CommonFunctions.isNumber(studentName)){
+            throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, studentName));
+        }
+
+        return new Student(facultyNumber, studentName, program, year, group);
     }
 }

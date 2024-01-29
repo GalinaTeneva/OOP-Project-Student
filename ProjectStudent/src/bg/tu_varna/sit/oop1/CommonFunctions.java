@@ -7,7 +7,7 @@ import bg.tu_varna.sit.oop1.enums.UserMessages;
  * like checking if a string is a number and parsing string to int or double number.
  */
 public class CommonFunctions {
-    
+
     /**
      * Checks if the given string is an integer or a double number.
      *

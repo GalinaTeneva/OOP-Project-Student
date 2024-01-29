@@ -33,7 +33,7 @@ public class Student {
      * @param group The group number of the student.
      * @throws StudentException if any parameter validation fails.
      */
-    public Student (String name, int facultyNumber, Program program, int year, int group) throws StudentException {
+    public Student (int facultyNumber, String name, Program program, int year, int group) throws StudentException {
         setName(name);
         setFacultyNumber(facultyNumber);
         setProgram(program);
