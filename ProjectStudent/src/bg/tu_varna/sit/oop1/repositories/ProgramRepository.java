@@ -1,6 +1,6 @@
 package bg.tu_varna.sit.oop1.repositories;
 
-import bg.tu_varna.sit.oop1.UserMessages;
+import bg.tu_varna.sit.oop1.enums.UserMessages;
 import bg.tu_varna.sit.oop1.models.Program;
 
 import java.util.Collection;

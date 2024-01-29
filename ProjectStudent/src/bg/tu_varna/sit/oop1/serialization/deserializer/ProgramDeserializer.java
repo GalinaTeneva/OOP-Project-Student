@@ -1,6 +1,6 @@
 package bg.tu_varna.sit.oop1.serialization.deserializer;
 
-import bg.tu_varna.sit.oop1.UserMessages;
+import bg.tu_varna.sit.oop1.enums.UserMessages;
 import bg.tu_varna.sit.oop1.exceptions.DeserializationException;
 import bg.tu_varna.sit.oop1.exceptions.ProgramException;
 import bg.tu_varna.sit.oop1.exceptions.SubjectException;

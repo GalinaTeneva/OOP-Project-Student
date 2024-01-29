@@ -1,8 +1,8 @@
 package bg.tu_varna.sit.oop1.models;
 
-import bg.tu_varna.sit.oop1.UserMessages;
+import bg.tu_varna.sit.oop1.enums.UserMessages;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
-import bg.tu_varna.sit.oop1.StudentStatus;
+import bg.tu_varna.sit.oop1.enums.StudentStatus;
 
 import java.util.Collection;
 import java.util.HashMap;

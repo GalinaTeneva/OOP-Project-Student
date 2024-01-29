@@ -1,5 +1,7 @@
 package bg.tu_varna.sit.oop1;
 
+import bg.tu_varna.sit.oop1.enums.StudentStatus;
+import bg.tu_varna.sit.oop1.enums.UserMessages;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
 import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;

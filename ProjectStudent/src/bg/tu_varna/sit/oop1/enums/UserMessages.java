@@ -1,5 +1,8 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.enums;
 
+/**
+ * Represents all user messages used in the application.
+ */
 public enum UserMessages {
     //Student exceptions:
     STUDENT_NAME_NULL_VALUE("Student name can not be null."),
