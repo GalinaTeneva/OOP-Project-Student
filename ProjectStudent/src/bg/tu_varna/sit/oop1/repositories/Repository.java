@@ -10,8 +10,6 @@ public interface Repository<T> {
 
     /**
      * Retrieves all objects currently stored in the repository.
-     *
-     * @return A collection of all objects in the repository.
      */
     Collection<T> getAll();
 
