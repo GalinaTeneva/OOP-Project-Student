@@ -22,13 +22,13 @@ public class Execute {
     private FileManager programFileManager;
 
     private StudentReporter studentReporter;
-    private StudentRepository studentRepository; //new edit
-    private ProgramRepository programRepository; //new edit
+    private StudentRepository studentRepository;
+    private ProgramRepository programRepository;
 
     public Execute() {
 
-        this.studentRepository = new StudentRepository(); //new edit
-        this.programRepository = new ProgramRepository(); //new edit
+        this.studentRepository = new StudentRepository();
+        this.programRepository = new ProgramRepository();
 
         this.studentSerializer = new StudentSerializer();
         this.studentDeserializer = new StudentDeserializer();
@@ -118,6 +118,7 @@ public class Execute {
                         necessaryCommandParts = 1;
                         if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
                             studentsFileManager.close();
+                            programFileManager.close();
                             isFileLoaded = false;
                             System.out.println("Successfully closed " + fileName);
                         }

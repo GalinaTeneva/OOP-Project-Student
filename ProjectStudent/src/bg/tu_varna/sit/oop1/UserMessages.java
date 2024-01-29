@@ -25,7 +25,7 @@ public enum UserMessages {
 
     //StudentService exceptions:
     STUDENT_EXISTS("The student already exists in the database."),
-    STUDENT_NOT_EXISTS("The student is not part of the database!."),
+    STUDENT_NOT_EXISTS("The student is not part of the database!"),
     STUDENT_DROPPED("This student has interrupted education."),
     PROGRAM_NOT_FOUND("The program is not part of the database."),
     NEW_STUDENT_YEAR_WRONG_VALUE("The student can not skip years."),

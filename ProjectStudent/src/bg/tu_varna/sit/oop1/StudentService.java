@@ -1,6 +1,5 @@
 package bg.tu_varna.sit.oop1;
 
-import bg.tu_varna.sit.oop1.exceptions.ProgramException;
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
 import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
@@ -19,12 +18,13 @@ public class StudentService {
         this.programRepository = programRepository;
     }
 
-    public void enroll (String[] commandParts) throws ProgramException, StudentException {
+    public void enroll (String[] commandParts) throws StudentException {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
 
         //Checking if student with this faculty number is already enrolled and Exception if the student already is in the database
-        Student student = studentRepository.findById(facultyNumber);
-        if(student != null) {
+        boolean isInDatabase = studentRepository.getAll().stream()
+                .anyMatch(student -> student.getFacultyNumber() == facultyNumber);
+        if(isInDatabase) {
             throw new IllegalArgumentException(UserMessages.STUDENT_EXISTS.message);
         }
 
@@ -34,11 +34,7 @@ public class StudentService {
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, programName));
         }
 
-        Program program = programRepository.findByName(programName);
-        //Exception if the program doesn't exist in the program database;
-        if(program == null) {
-            throw new IllegalArgumentException(UserMessages.PROGRAM_NOT_FOUND.message);
-        }
+        Program program = programRepository.getOrThrow(programName); //Exception if the program doesn't exist in the program database;
 
         int group = intParser(commandParts[3]); //Parses if possible and throws exception if not
 
@@ -59,7 +55,8 @@ public class StudentService {
 
     public void advance(String[] commandParts) throws StudentException {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
-        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
         student.setYear(student.getYear() + 1); //Setts the next year of study
         System.out.println(String.format("Successfully changed student %d year.", facultyNumber));
@@ -75,7 +72,7 @@ public class StudentService {
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, option));
         }
 
-        Student student = getStudentOrThrow(facultyNumber); //Returns student if in database and throws exception if the student doesn't exists
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns student if in database and throws exception if the student doesn't exist
 
         if(isStudentActive(student)) { //Checks if student status is "enrolled"
             int currentYear = student.getYear();
@@ -87,7 +84,7 @@ public class StudentService {
                     throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, value));
                 }
 
-                Program program = getProgramOrThrow(value); //Returns the program if exist and throw if it doesn't;
+                Program program = programRepository.getOrThrow(value); //Returns the program if exist and throw if it doesn't;
 
                 //Extracting all mandatory subjects from the new program that must be taken before the change
                 Collection<Subject> mandatorySubjects = program.getSubjectsByCourse().entrySet()
@@ -128,7 +125,7 @@ public class StudentService {
 
     public void graduate(String[] commandParts) throws StudentException {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
-        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
         Map<Subject, Double> studentGrades = student.getGradesBySubject();
 
@@ -147,14 +144,14 @@ public class StudentService {
 
     public void interrupt(String[] commandParts) throws StudentException {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
-        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         student.setStatus("dropped");
         System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
     }
 
     public void resume(String[] commandParts) throws StudentException {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
-        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         student.setStatus("enrolled");
         System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
     }
@@ -167,12 +164,12 @@ public class StudentService {
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, subjectName));
         }
 
-        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         int studentYear = student.getYear();
         String studentProgramName = student.getProgram().getName();
 
         // All subjects by course for the student's program
-        Map<Integer, Collection<Subject>> studentProgramSubjects = getProgramOrThrow(studentProgramName).getSubjectsByCourse();
+        Map<Integer, Collection<Subject>> studentProgramSubjects = programRepository.getOrThrow(studentProgramName).getSubjectsByCourse();
 
         //All subject available for the student's current course
         Collection<Subject> availableSubjects = studentProgramSubjects.get(studentYear);
@@ -204,7 +201,7 @@ public class StudentService {
             throw new StudentException(UserMessages.GRADE_WRONG_VALUE.message);
         }
 
-        Student student = getStudentOrThrow(facultyNumber);  //Returns the student if exists and throws exception if it doesn't
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         StudentStatus studentStatus = student.getStatus();
 
         if (studentStatus.toString().equalsIgnoreCase("dropped")) {
@@ -226,25 +223,6 @@ public class StudentService {
 
         studentGradesBySubject.put(subject, grade);
         System.out.println(String.format("Successfully added grade %.2f for course %s in student %d record.", grade, subjectName, facultyNumber));
-    }
-
-    private Student getStudentOrThrow(int facultyNumber) throws IllegalArgumentException {
-        Student student = studentRepository.findById(facultyNumber);
-        if (student == null) {
-            throw new IllegalArgumentException(UserMessages.STUDENT_NOT_EXISTS.message);
-        }
-        return student;
-    }
-
-    private Program getProgramOrThrow (String name) {
-        Program program = programRepository.findByName(name);
-
-        //Exception if the subject is not in the database
-        if(program == null) {
-            throw new IllegalArgumentException(UserMessages.PROGRAM_NOT_FOUND.message);
-        }
-
-        return program;
     }
 
     private void checkMandatorySubjectsGrades(Map<Subject, Double> gradesBySubject, Collection<Subject> mandatorySubjects) throws Exception {

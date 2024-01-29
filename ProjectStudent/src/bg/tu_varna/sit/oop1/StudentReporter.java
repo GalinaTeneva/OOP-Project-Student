@@ -20,7 +20,7 @@ public class StudentReporter implements Reportable {
     @Override
     public void print(String[] commandParts) {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
-        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         String studentReport = serializer.serialize(student); //Serializes student
         System.out.println(studentReport);
     }
@@ -68,7 +68,7 @@ public class StudentReporter implements Reportable {
     @Override
     public void report(String[] commandParts) {
         int facultyNumber = intParser(commandParts[1]); //Parses if possible and throws exception if not
-        Student student = getStudentOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
+        Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
         Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();
         if (studentGradesBySubject.size() == 0) {
@@ -141,13 +141,13 @@ public class StudentReporter implements Reportable {
         return sb.toString();
     }
 
-    private Student getStudentOrThrow(int facultyNumber) throws IllegalArgumentException {
+    /*private Student getStudentOrThrow(int facultyNumber) throws IllegalArgumentException {
         Student student = studentRepository.findById(facultyNumber);
         if (student == null) {
             throw new IllegalArgumentException(UserMessages.STUDENT_NOT_EXISTS.message);
         }
         return student;
-    }
+    }*/
 
     private void printSubjectsByProgram (String subjectName) {
         StringBuilder sb = new StringBuilder();
