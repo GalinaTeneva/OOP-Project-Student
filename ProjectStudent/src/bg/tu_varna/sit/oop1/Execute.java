@@ -32,7 +32,6 @@ public class Execute {
     private ProgramRepository programRepository;
 
     public Execute() {
-
         this.studentRepository = new StudentRepository();
         this.programRepository = new ProgramRepository();
 
