@@ -48,7 +48,9 @@ public enum UserMessages {
     FILE_NOT_LOADED("File not opened."),
     STUDENT_STATUS_CHANGED("Successfully changed student %d status."),
     WRONG_NUMBER_DATA("The value \"%s\" must be a number"),
-    WRONG_STRING_DATA("The value \"%s\" can not be a number");
+    WRONG_STRING_DATA("The value \"%s\" can not be a number"),
+
+    MISSING_DIRECTORY_ERROR("Invalid path");
 
     public final String message;
 

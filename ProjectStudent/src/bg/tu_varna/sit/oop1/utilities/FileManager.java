@@ -1,5 +1,6 @@
 package bg.tu_varna.sit.oop1.utilities;
 
+import bg.tu_varna.sit.oop1.enums.UserMessages;
 import bg.tu_varna.sit.oop1.serialization.deserializer.CustomDeserializable;
 import bg.tu_varna.sit.oop1.serialization.serializer.CustomSerializable;
 import bg.tu_varna.sit.oop1.repositories.Repository;
@@ -48,6 +49,12 @@ public class FileManager<T> {
      * @throws IOException If an error occurs while reading the file.
      */
     public void open (String filePath) throws IOException {
+
+        boolean isDirExists = validateDirectory(filePath);
+        if(!isDirExists){
+            throw new IOException(UserMessages.MISSING_DIRECTORY_ERROR.message);
+        }
+
         File file = new File(filePath);
 
         if (!file.exists()) {
@@ -87,6 +94,31 @@ public class FileManager<T> {
                 writer.write(line);
                 writer.newLine();
             }
+        }
+    }
+
+    /**
+     * Validates if the specified path is a directory.
+     * This method takes a file path as a string and checks if it leads to a directory.
+     *
+     * @param path The file path as a String.
+     * @return true if the path is a directory and false otherwise.
+     */
+    private boolean validateDirectory(String path) {
+        StringBuilder sb = new StringBuilder();
+        String[] filePathParts = path.split("\\\\");
+
+        for (int i = 0; i < filePathParts.length - 2; i++) {
+            sb.append(filePathParts[i]).append("\\");
+        }
+
+        File directory = new File(sb.toString());
+
+        // Check if the directory already exists
+        if (directory.isDirectory()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

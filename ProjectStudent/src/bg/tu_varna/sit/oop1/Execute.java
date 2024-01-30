@@ -89,7 +89,6 @@ public class Execute {
                         System.out.println(line);
                     }
                 } catch (IOException e) {
-                    //e.printStackTrace();
                     System.out.println("An error occurred while reading the file.");
                 }
 
@@ -100,12 +99,6 @@ public class Execute {
                 if(command.equals("OPEN") && !isFileLoaded) {
                     necessaryCommandParts = 2;
                     if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-                        boolean isDirExists = validateDirectory(commandParts[1]);
-                        if(!isDirExists){
-                            System.out.println("Invalid path");
-                            continue;
-                        }
-
                         filePath = commandParts[1];
                         fileName = getFileName(filePath);
 
@@ -278,25 +271,6 @@ public class Execute {
                     studentReporter.report(commandParts);
                 }
                 break;
-        }
-    }
-
-    private boolean validateDirectory(String path) {
-        StringBuilder sb = new StringBuilder();
-        String[] filePathParts = path.split("\\\\");
-
-        for (int i = 0; i < filePathParts.length - 2; i++) {
-            sb.append(filePathParts[i]).append("\\");
-        }
-
-        File directory = new File(sb.toString());
-
-        // Check if the directory already exists
-        if (/*directory.exists() && */directory.isDirectory()) {
-            return true; // The directory exists
-        } else {
-            // Try to create the directory
-            return false;
         }
     }
 
