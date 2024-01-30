@@ -54,7 +54,7 @@ public enum UserMessages {
 
     public final String message;
 
-    private UserMessages(String message) {
+    UserMessages(String message) {
         this.message = message;
     }
 }

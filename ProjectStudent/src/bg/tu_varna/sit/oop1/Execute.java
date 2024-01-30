@@ -17,6 +17,9 @@ import java.io.*;
 import java.util.HashSet;
 import java.util.Scanner;
 
+/**
+ * The Execute class is handling user inputs and executing corresponding commands.
+ */
 public class Execute {
     private String pathToProgramsDatabaseFile = ".\\ProgramsData.txt";
     private String pathToFileHelp = ".\\HelpInfo.txt";
@@ -34,6 +37,9 @@ public class Execute {
     private StudentRepository studentRepository;
     private ProgramRepository programRepository;
 
+    /**
+     * Constructor to initialize the repositories, serializers, deserializers, services, and file managers.
+     */
     public Execute() {
         this.studentRepository = new StudentRepository();
         this.programRepository = new ProgramRepository();
@@ -50,6 +56,10 @@ public class Execute {
         this.programFileManager = new FileManager(programDeserializer, programRepository);
     }
 
+    /**
+     * Starts the execution of the application.
+     * It runs in a loop, processing input commands until an exit command is given.
+     */
     public void runProject() {
         boolean isFileLoaded = false;
         String fileName = "";
@@ -151,6 +161,12 @@ public class Execute {
         }
     }
 
+    /**
+     * Retrieves help information from a specified file.
+     *
+     * @param pathToFileHelp The path to the help file.
+     * @return A string containing the help information.
+     */
     private String getHelpInfo(String pathToFileHelp) {
         StringBuilder sb = new StringBuilder();
 
@@ -166,6 +182,11 @@ public class Execute {
         return sb.toString();
     }
 
+    /**
+     * Fetches all student-related commands from the StudentCommand enum.
+     *
+     * @return A HashSet containing student commands as strings.
+     */
     private HashSet<String> getStudentCommands() {
         StudentCommand[] commands = StudentCommand.values();
         HashSet<String> commandSet = new HashSet<>();
@@ -177,6 +198,11 @@ public class Execute {
         return commandSet;
     }
 
+    /**
+     * Fetches all report-related commands from the ReportCommand enum.
+     *
+     * @return A HashSet containing report commands as strings.
+     */
     private HashSet<String> getReportCommands() {
         ReportCommand[] commands = ReportCommand.values();
         HashSet<String> commandSet = new HashSet<>();
@@ -188,6 +214,11 @@ public class Execute {
         return commandSet;
     }
 
+    /**
+     * Fetches all general commands from the GeneralCommand enum.
+     *
+     * @return A HashSet containing general commands as strings.
+     */
     private HashSet<String> getGeneralCommands() {
         GeneralCommand[] commands = GeneralCommand.values();
         HashSet<String> commandSet = new HashSet<>();
@@ -199,6 +230,13 @@ public class Execute {
         return commandSet;
     }
 
+    /**
+     * Processes student commands by calling the corresponding method in StudentService.
+     *
+     * @param command The command to be processed.
+     * @param commandParts The arguments of the command as array of strings.
+     * @throws Exception If there is an issue in processing the command.
+     */
     private void processStudentCommand(String command, String[] commandParts) throws Exception {
         int neededCommandParts = 0;
         switch (command) {
@@ -253,6 +291,12 @@ public class Execute {
         }
     }
 
+    /**
+     * Processes student commands by calling the corresponding method in StudentReporter.
+     *
+     * @param command The command to be processed.
+     * @param commandParts The arguments of the command as array of strings.
+     */
     private void processProtocolCommand(String command, String[] commandParts) {
         int neededCommandParts = 0;
         switch (command) {
@@ -283,6 +327,14 @@ public class Execute {
         }
     }
 
+    /**
+     * Validates the length of the command parts array considering the expected count.
+     *
+     * @param parts The command parts array.
+     * @param count The expected count of parts.
+     * @return true if the length matches the expected count.
+     * @throws IllegalArgumentException If the length of the parts array does not match the expected count.
+     */
     private boolean checkCommandPartsLength(String[] parts, int count) {
         if (parts.length != count) {
             throw new IllegalArgumentException(UserMessages.WRONG_ARGUMENTS_COUNT.message);
@@ -291,6 +343,12 @@ public class Execute {
         return true;
     }
 
+    /**
+     * Extracts the file name from a given file path.
+     *
+     * @param path The file path.
+     * @return The extracted file name.
+     */
     private String getFileName(String path) {
         String[] filePathParts = path.split("\\\\");
         String fileName = filePathParts[filePathParts.length - 1];

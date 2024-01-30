@@ -15,7 +15,7 @@ import java.util.Map;
 public class Student {
     private String name;
     private int facultyNumber;
-    private int year; //currCourse
+    private int year;
     private Program program;
     private int group;
     private StudentStatus status;

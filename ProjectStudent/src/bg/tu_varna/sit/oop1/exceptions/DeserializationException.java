@@ -5,6 +5,7 @@ package bg.tu_varna.sit.oop1.exceptions;
  * when an error occurs during the deserialization process.
  */
 public class DeserializationException extends Exception {
+
     /**
      * Constructs a new DeserializationException with a given detail message.
      *
