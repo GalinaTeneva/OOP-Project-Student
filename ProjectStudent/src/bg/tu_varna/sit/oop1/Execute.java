@@ -139,7 +139,7 @@ public class Execute {
                         if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
                             String newPath = commandParts[1];
                             String anotherFileName = getFileName(newPath);
-                            studentsFileManager.saveAs(newPath);
+                            studentsFileManager.save(newPath);
                             System.out.println("Successfully saved another " + anotherFileName);
                         }
                         break;
