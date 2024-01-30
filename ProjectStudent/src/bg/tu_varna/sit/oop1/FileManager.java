@@ -5,7 +5,7 @@ import bg.tu_varna.sit.oop1.serialization.serializer.CustomSerializable;
 import bg.tu_varna.sit.oop1.repositories.Repository;
 
 import java.io.*;
-
+//TODO: Add comments!!
 public class FileManager<T> {
     private CustomSerializable<T> serializableService;
     private CustomDeserializable<T> deserializableService;

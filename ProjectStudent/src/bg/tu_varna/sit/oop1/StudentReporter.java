@@ -145,7 +145,6 @@ public class StudentReporter implements Reportable {
     private void printSubjectsByProgram (String subjectName) {
         StringBuilder sb = new StringBuilder();
 
-
         List<Student> programFilteredStudents = studentRepository.getAll().stream()
                 .filter(student -> student.getGradesBySubject().keySet().stream()
                         .anyMatch(subject -> subject.getName().equalsIgnoreCase(subjectName)))

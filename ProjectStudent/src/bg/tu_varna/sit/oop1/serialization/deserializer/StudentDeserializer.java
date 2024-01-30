@@ -43,7 +43,7 @@ public class StudentDeserializer implements CustomDeserializable<Student> {
         int group = Integer.parseInt(parts[4].split(": ")[1]);
         String status = parts[5].split(": ")[1];
 
-        Student student = new Student(name, facultyNumber, program, year, group);
+        Student student = new Student(facultyNumber, name, program, year, group);
         student.setStatus(status);
 
         if (parts.length > 6) {
