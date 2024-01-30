@@ -10,6 +10,7 @@ import bg.tu_varna.sit.oop1.serialization.deserializer.StudentDeserializer;
 import bg.tu_varna.sit.oop1.repositories.ProgramRepository;
 import bg.tu_varna.sit.oop1.repositories.StudentRepository;
 import bg.tu_varna.sit.oop1.serialization.serializer.StudentSerializer;
+import bg.tu_varna.sit.oop1.services.StudentService;
 import bg.tu_varna.sit.oop1.utilities.FileManager;
 
 import java.io.*;
@@ -17,8 +18,8 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 public class Execute {
-    private String pathToProgramsDatabaseFile = "D:\\UserData\\Desktop\\ProgramsData.txt";
-    private String pathToFileHelp = "D:\\UserData\\Desktop\\help.txt";
+    private String pathToProgramsDatabaseFile = ".\\ProgramsData.txt";
+    private String pathToFileHelp = ".\\HelpInfo.txt";
 
     private Scanner scanner;
     private StudentSerializer studentSerializer;
@@ -83,15 +84,8 @@ public class Execute {
             }
 
             if (command.equals("HELP")) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(pathToFileHelp))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                } catch (IOException e) {
-                    System.out.println("An error occurred while reading the file.");
-                }
-
+                String helpInfo = getHelpInfo(pathToFileHelp);
+                System.out.println(helpInfo);
                 continue;
             }
 
@@ -155,6 +149,21 @@ public class Execute {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+
+    private String getHelpInfo(String pathToFileHelp) {
+        StringBuilder sb = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathToFileHelp))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return sb.toString();
     }
 
     private HashSet<String> getStudentCommands() {

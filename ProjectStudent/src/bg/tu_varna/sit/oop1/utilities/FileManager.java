@@ -49,13 +49,14 @@ public class FileManager<T> {
      * @throws IOException If an error occurs while reading the file.
      */
     public void open (String filePath) throws IOException {
+        File file = new File(filePath);
+        String absolutePath = file.getAbsolutePath();
 
-        boolean isDirExists = validateDirectory(filePath);
+        boolean isDirExists = validateDirectory(absolutePath);
         if(!isDirExists){
             throw new IOException(UserMessages.MISSING_DIRECTORY_ERROR.message);
         }
 
-        File file = new File(filePath);
 
         if (!file.exists()) {
             file.createNewFile();

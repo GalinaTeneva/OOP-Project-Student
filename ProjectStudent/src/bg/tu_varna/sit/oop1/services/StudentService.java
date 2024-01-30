@@ -1,4 +1,4 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.services;
 
 import bg.tu_varna.sit.oop1.enums.StudentStatus;
 import bg.tu_varna.sit.oop1.enums.UserMessages;
@@ -12,17 +12,32 @@ import bg.tu_varna.sit.oop1.utilities.StudentUtility;
 
 import java.util.*;
 
+/**
+ * This class manages student services like enrollment and grading.
+ */
 public class StudentService {
     private Repository<Student> studentRepository;
     private Repository<Program> programRepository;
     private StudentUtility studentUtility;
 
+    /**
+     * Constructs a new StudentService instance.
+     *
+     * @param studentRepository The repository for managing student data.
+     * @param programRepository The repository for managing program data.
+     */
     public StudentService(Repository<Student> studentRepository, Repository<Program> programRepository) {
         this.studentRepository = studentRepository;
         this.programRepository = programRepository;
         this.studentUtility = new StudentUtility(studentRepository, programRepository);
     }
 
+    /**
+     * Enrolls a student in a specified program.
+     * The method must receive array of string containing the name of the command, faculty number, program, group and name.
+     * @param commandParts The array of strings containing the needed command parts.
+     * @throws StudentException If any error occurs during the enrollment process.
+     */
     public void enroll (String[] commandParts) throws StudentException {
         int facultyNumber = CommonUtility.intParser(commandParts[1]); //Parses if possible and throws exception if not
         String programName = commandParts[2];
@@ -39,6 +54,13 @@ public class StudentService {
                 studentName, facultyNumber, group, programName));
     }
 
+    /**
+     * Advances a student to the next year of study.
+     * The method must receive array of string containing the name of the command and faculty number.
+     *
+     * @param commandParts The array of strings containing the needed command parts.
+     * @throws StudentException If any error occurs.
+     */
     public void advance(String[] commandParts) throws StudentException {
         int facultyNumber = CommonUtility.intParser(commandParts[1]); //Parses if possible and throws exception if not
 
@@ -48,6 +70,12 @@ public class StudentService {
         System.out.println(String.format("Successfully changed student %d year.", facultyNumber));
     }
 
+    /**
+     * Changes a student's program, group, or year based on the specified option.
+     *
+     * @param commandParts The array of strings containing the command name, faculty number, option, and new value.
+     * @throws Exception If any error occurs.
+     */
     public void change(String[] commandParts) throws Exception {
         //Parses if possible and throws exception if not
         int facultyNumber = CommonUtility.intParser(commandParts[1]);
@@ -115,6 +143,12 @@ public class StudentService {
         }
     }
 
+    /**
+     * Graduates a student if all the enrolled subjects are passed.
+     *
+     * @param commandParts The array of strings containing the command name and the faculty number.
+     * @throws StudentException If the student cannot graduate.
+     */
     public void graduate(String[] commandParts) throws StudentException {
         //Parses if possible and throws exception if not
         int facultyNumber = CommonUtility.intParser(commandParts[1]);
@@ -137,6 +171,12 @@ public class StudentService {
         }
     }
 
+    /**
+     * Interrupts a student's education.
+     *
+     * @param commandParts The array of strings containing the command name and the faculty number.
+     * @throws StudentException If any error occurs.
+     */
     public void interrupt(String[] commandParts) throws StudentException {
         //Parses if possible and throws exception if not
         int facultyNumber = CommonUtility.intParser(commandParts[1]);
@@ -147,6 +187,12 @@ public class StudentService {
         System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
     }
 
+    /**
+     * Resumes a student's education.
+     *
+     * @param commandParts The array of strings containing the command name and the faculty number.
+     * @throws StudentException If any error occurs.
+     */
     public void resume(String[] commandParts) throws StudentException {
         //Parses if possible and throws exception if not
         int facultyNumber = CommonUtility.intParser(commandParts[1]);
@@ -157,6 +203,11 @@ public class StudentService {
         System.out.println(String.format(UserMessages.STUDENT_STATUS_CHANGED.message, facultyNumber));
     }
 
+    /**
+     * Enrolls a student in a specified subject.
+     *
+     * @param commandParts The array of strings containing the command name, the faculty number and subject name.
+     */
     public void enrollIn(String[] commandParts) {
         //Parses if possible and throws exception if not
         int facultyNumber = CommonUtility.intParser(commandParts[1]);
@@ -181,6 +232,12 @@ public class StudentService {
         System.out.println(String.format("Successfully enrolled student %d in course %s", facultyNumber, subjectName));
     }
 
+    /**
+     * Adds a grade for a student in a specific subject.
+     *
+     * @param commandParts The array of strings containing the command name, the faculty number, subject name, and grade.
+     * @throws StudentException If any error occurs during adding the grade.
+     */
     public void addGrade(String[] commandParts) throws StudentException {
         //Parses if possible and throws exception if not
         int facultyNumber = CommonUtility.intParser(commandParts[1]);

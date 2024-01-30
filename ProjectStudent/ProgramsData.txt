@@ -1,0 +1,2 @@
+SIT: 1 -> Math1 - mandatory | English - optional | ITechnology - mandatory; 2 -> Math2 - mandatory | Statistics - optional | Algorithms - mandatory; 3 -> OOP - mandatory | Communications - mandatory; 4 -> Cryptography - optional | DBS - mandatory
+CST: 1 -> Math1 - mandatory | English - optional | ITechnology - mandatory; 2 -> Math2 - mandatory | OOP - optional | Communications - mandatory; 3 -> Hardware  - mandatory | DBS - optional; 4 -> Microprocessors - mandatory | Cryptography - optional | BIS - mandatory

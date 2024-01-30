@@ -1,0 +1,21 @@
+The following commands are supported:
+open <file>.............................opens <file>
+close...................................closes currently opened file
+save....................................saves the currently open file
+saveas <file>...........................saves the currently open file in <file>
+help....................................prints this information
+exit....................................exists the program
+enroll <fn> <program> <group> <name>....enrolls student with <fn> and <name> in <program> <group>
+advance <fn>............................enrolls student in next year
+change <fn> <program> <value>...........changes <program> to <value> of student <fn>
+change <fn> <group> <value>.............changes <group> to <value> of student <fn>
+change <fn> <year> <value>..............changes <year> to <value> of student <fn>
+graduate <fn>...........................changes student <fn> status to "graduate"
+interrupt <fn>..........................changes student <fn> status to "interrupt"
+resume <fn>.............................changes student <fn> status to "resume"
+enrollin <fn> <course>..................enrolls in student <fn> in <course>
+addgrade <fn> <course> <grade>..........adds <grade> to student <fn> for <course>
+print <fn>..............................makes full report for student <fn>
+printall <program> <year>...............makes report for all students by <program> and <year>
+protocol <course>.......................makes report for all students in <course>
+report <fn>.............................makes report for student <fn> grades
