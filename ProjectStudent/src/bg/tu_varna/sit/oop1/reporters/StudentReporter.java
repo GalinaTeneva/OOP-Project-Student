@@ -1,10 +1,12 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.reporters;
 
 import bg.tu_varna.sit.oop1.enums.UserMessages;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
+import bg.tu_varna.sit.oop1.reporters.Reportable;
 import bg.tu_varna.sit.oop1.repositories.Repository;
 import bg.tu_varna.sit.oop1.serialization.serializer.StudentSerializer;
+import bg.tu_varna.sit.oop1.utilities.CommonUtility;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,7 +22,7 @@ public class StudentReporter implements Reportable {
 
     @Override
     public void print(String[] commandParts) {
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonUtility.intParser(commandParts[1]); //Parses if possible and throws exception if not
         Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
         String studentReport = serializer.serialize(student); //Serializes student
         System.out.println(studentReport);
@@ -30,11 +32,11 @@ public class StudentReporter implements Reportable {
     public void printAll(String[] commandParts) {
         String programName = commandParts[1];
         //Throwing exception if program name is number
-        if(CommonFunctions.isNumber(programName)){
+        if(CommonUtility.isNumber(programName)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, programName));
         }
 
-        int year = CommonFunctions.intParser(commandParts[2]); //Parses if possible and throws exception if not
+        int year = CommonUtility.intParser(commandParts[2]); //Parses if possible and throws exception if not
 
         //returns all students which properties match the given program and year
         List<Student> filteredStudents = studentRepository.getAll().stream()
@@ -53,7 +55,7 @@ public class StudentReporter implements Reportable {
     public void protocol(String[] commandParts) {
         String subjectName = commandParts[1];
         //Throwing exception if subject name is number
-        if(CommonFunctions.isNumber(subjectName)){
+        if(CommonUtility.isNumber(subjectName)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, subjectName));
         }
 
@@ -68,7 +70,7 @@ public class StudentReporter implements Reportable {
 
     @Override
     public void report(String[] commandParts) {
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonUtility.intParser(commandParts[1]); //Parses if possible and throws exception if not
         Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
         Map<Subject, Double> studentGradesBySubject = student.getGradesBySubject();

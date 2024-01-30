@@ -1,4 +1,4 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.utilities;
 
 import bg.tu_varna.sit.oop1.serialization.deserializer.CustomDeserializable;
 import bg.tu_varna.sit.oop1.serialization.serializer.CustomSerializable;

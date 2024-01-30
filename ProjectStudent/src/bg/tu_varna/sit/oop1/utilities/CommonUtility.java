@@ -1,4 +1,4 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.utilities;
 
 import bg.tu_varna.sit.oop1.enums.UserMessages;
 
@@ -6,10 +6,10 @@ import bg.tu_varna.sit.oop1.enums.UserMessages;
  * The CommonFunctions class provides utility methods for common operations
  * like checking if a string is a number and parsing string to int or double number.
  */
-public class CommonFunctions {
+public class CommonUtility {
 
     /**
-     * Checks if the given string is an integer or a double number.
+     * Checks if the given string is a numeric.
      *
      * @param value The string to be checked.
      * @return true if the string is number and false if it is not.
@@ -28,9 +28,8 @@ public class CommonFunctions {
      * @throws NumberFormatException If the string is not a valid integer.
      */
     public static int intParser(String value) {
-        //Checking if the value can be parsed
         boolean isNumber = isNumber(value);
-        //Exception if  the value can not be parsed
+
         if (!isNumber) {
             throw new NumberFormatException(String.format(UserMessages.WRONG_NUMBER_DATA.message, value));
         }
@@ -47,9 +46,8 @@ public class CommonFunctions {
      * @throws NumberFormatException If the string is not a valid double.
      */
     public static double doubleParser(String value) {
-        //Checking if the value can be parsed
         boolean isNumber = isNumber(value);
-        //Exception if the value can not be parsed
+
         if (!isNumber) {
             throw new NumberFormatException(String.format(UserMessages.WRONG_NUMBER_DATA.message, value));
         }

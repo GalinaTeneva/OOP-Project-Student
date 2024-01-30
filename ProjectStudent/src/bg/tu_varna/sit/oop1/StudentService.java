@@ -7,6 +7,8 @@ import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
 import bg.tu_varna.sit.oop1.repositories.Repository;
+import bg.tu_varna.sit.oop1.utilities.CommonUtility;
+import bg.tu_varna.sit.oop1.utilities.StudentUtility;
 
 import java.util.*;
 
@@ -22,9 +24,9 @@ public class StudentService {
     }
 
     public void enroll (String[] commandParts) throws StudentException {
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonUtility.intParser(commandParts[1]); //Parses if possible and throws exception if not
         String programName = commandParts[2];
-        int group = CommonFunctions.intParser(commandParts[3]); //Parses if possible and throws exception if not
+        int group = CommonUtility.intParser(commandParts[3]); //Parses if possible and throws exception if not
         String studentName = commandParts[4];
         int year = 1; //All students start from the first year of study when enrolled
 
@@ -38,7 +40,7 @@ public class StudentService {
     }
 
     public void advance(String[] commandParts) throws StudentException {
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]); //Parses if possible and throws exception if not
+        int facultyNumber = CommonUtility.intParser(commandParts[1]); //Parses if possible and throws exception if not
 
         Student student = studentRepository.getOrThrow(facultyNumber); //Returns the student if exists and throws exception if it doesn't
 
@@ -48,13 +50,13 @@ public class StudentService {
 
     public void change(String[] commandParts) throws Exception {
         //Parses if possible and throws exception if not
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]);
+        int facultyNumber = CommonUtility.intParser(commandParts[1]);
 
         String option = commandParts[2];
         String value = commandParts[3];
 
         //Throwing exception if option is number
-        if(CommonFunctions.isNumber(option)){
+        if(CommonUtility.isNumber(option)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, option));
         }
 
@@ -67,7 +69,7 @@ public class StudentService {
 
             if (option.equalsIgnoreCase("program")) {
                 //Throwing exception if program name is number
-                if(CommonFunctions.isNumber(value)){
+                if(CommonUtility.isNumber(value)){
                     throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, value));
                 }
 
@@ -86,13 +88,13 @@ public class StudentService {
 
             } else if (option.equalsIgnoreCase("group")) {
                 //Sets the parsed value if possible and throws exception if not
-                student.setGroup(CommonFunctions.intParser(value));
+                student.setGroup(CommonUtility.intParser(value));
 
                 System.out.println(String.format("Successfully changed student %d group to %s.", facultyNumber, value));
 
             } else if (option.equalsIgnoreCase("year")) {
                 //Parses if possible and throws exception if not
-                int newYear = CommonFunctions.intParser(value);
+                int newYear = CommonUtility.intParser(value);
 
                 //Throws exception if new year in not in the range [1-4]
                 if (newYear == currentYear || newYear > currentYear + 1 || newYear < currentYear + 1) {
@@ -115,7 +117,7 @@ public class StudentService {
 
     public void graduate(String[] commandParts) throws StudentException {
         //Parses if possible and throws exception if not
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]);
+        int facultyNumber = CommonUtility.intParser(commandParts[1]);
 
         //Returns the student if exists and throws exception if it doesn't
         Student student = studentRepository.getOrThrow(facultyNumber);
@@ -137,7 +139,7 @@ public class StudentService {
 
     public void interrupt(String[] commandParts) throws StudentException {
         //Parses if possible and throws exception if not
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]);
+        int facultyNumber = CommonUtility.intParser(commandParts[1]);
         //Returns the student if exists and throws exception if it doesn't
         Student student = studentRepository.getOrThrow(facultyNumber);
 
@@ -147,7 +149,7 @@ public class StudentService {
 
     public void resume(String[] commandParts) throws StudentException {
         //Parses if possible and throws exception if not
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]);
+        int facultyNumber = CommonUtility.intParser(commandParts[1]);
         //Returns the student if exists and throws exception if it doesn't
         Student student = studentRepository.getOrThrow(facultyNumber);
 
@@ -157,11 +159,11 @@ public class StudentService {
 
     public void enrollIn(String[] commandParts) {
         //Parses if possible and throws exception if not
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]);
+        int facultyNumber = CommonUtility.intParser(commandParts[1]);
         String subjectName = commandParts[2];
 
         //Throwing exception if subject name is number
-        if(CommonFunctions.isNumber(subjectName)){
+        if(CommonUtility.isNumber(subjectName)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, subjectName));
         }
 
@@ -181,16 +183,16 @@ public class StudentService {
 
     public void addGrade(String[] commandParts) throws StudentException {
         //Parses if possible and throws exception if not
-        int facultyNumber = CommonFunctions.intParser(commandParts[1]);
+        int facultyNumber = CommonUtility.intParser(commandParts[1]);
         String subjectName = commandParts[2];
 
         //Throwing exception if subject name is number
-        if(CommonFunctions.isNumber(subjectName)){
+        if(CommonUtility.isNumber(subjectName)){
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, subjectName));
         }
 
         //Parses if possible and throws exception if not
-        double grade = CommonFunctions.doubleParser(commandParts[3]);
+        double grade = CommonUtility.doubleParser(commandParts[3]);
 
         //Exception if grade is not in the range [2.00-6.00]
         if (grade < 2.00 || grade > 6.00) {

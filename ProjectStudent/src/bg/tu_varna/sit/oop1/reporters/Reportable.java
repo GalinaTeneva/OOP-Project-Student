@@ -1,4 +1,4 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.reporters;
 
 public interface Reportable {
     void print(String[] commandParts);

@@ -1,4 +1,4 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.utilities;
 
 import bg.tu_varna.sit.oop1.enums.StudentStatus;
 import bg.tu_varna.sit.oop1.enums.UserMessages;
@@ -7,6 +7,7 @@ import bg.tu_varna.sit.oop1.models.Program;
 import bg.tu_varna.sit.oop1.models.Student;
 import bg.tu_varna.sit.oop1.models.Subject;
 import bg.tu_varna.sit.oop1.repositories.Repository;
+import bg.tu_varna.sit.oop1.utilities.CommonUtility;
 
 import java.util.Collection;
 import java.util.Map;
@@ -112,14 +113,14 @@ public class StudentUtility {
         }
 
         //Exception if programName is number
-        if (CommonFunctions.isNumber(programName)) {
+        if (CommonUtility.isNumber(programName)) {
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, programName));
         }
         //Exception if the program doesn't exist in the program database;
         Program program = programRepository.getOrThrow(programName);
 
         //Exception if student name is number
-        if (CommonFunctions.isNumber(studentName)) {
+        if (CommonUtility.isNumber(studentName)) {
             throw new IllegalArgumentException(String.format(UserMessages.WRONG_STRING_DATA.message, studentName));
         }
 
