@@ -1,11 +1,6 @@
 Name: Mariya | Faculty number: 8888 | Program: SIT | Year: 1 | Group: 10 | Status: ENROLLED | Grades: Math1 -> mandatory -> 3.3; English -> optional -> 2.0
 Name: Vasil | Faculty number: 1 | Program: SIT | Year: 1 | Group: 11 | Status: ENROLLED | Grades: Math1 -> mandatory -> 2.0
-Name: Ma | Faculty number: 2312 | Program: SIT | Year: 1 | Group: 10 | Status: ENROLLED | Grades: Math1 -> mandatory -> 3.6
-Name: Vasil | Faculty number: 2580 | Program: CST | Year: 1 | Group: 10 | Status: ENROLLED | Grades: Math1 -> mandatory -> 3.6
 Name: Koko | Faculty number: 513 | Program: SIT | Year: 1 | Group: 1 | Status: DROPPED
 Name: Misho | Faculty number: 15 | Program: SIT | Year: 1 | Group: 10 | Status: ENROLLED
-Name: Vasil | Faculty number: 14 | Program: CST | Year: 1 | Group: 10 | Status: ENROLLED | Grades: Math1 -> mandatory -> 3.6
-Name: Vasil | Faculty number: 7777 | Program: SIT | Year: 1 | Group: 10 | Status: ENROLLED
-Name: Koko | Faculty number: 1616 | Program: CST | Year: 1 | Group: 10 | Status: ENROLLED
+Name: Vasil | Faculty number: 14 | Program: CST | Year: 1 | Group: 10 | Status: ENROLLED | Grades: Math1 -> mandatory -> 5.6
 Name: Kosta | Faculty number: 369 | Program: SIT | Year: 1 | Group: 10 | Status: ENROLLED | Grades: Math1 -> mandatory -> 3.6
-Name: Vasil | Faculty number: 350 | Program: SIT | Year: 1 | Group: 10 | Status: ENROLLED | Grades: Math1 -> mandatory -> 3.6

@@ -5,15 +5,10 @@ import bg.tu_varna.sit.oop1.enums.ReportCommand;
 import bg.tu_varna.sit.oop1.enums.StudentCommand;
 import bg.tu_varna.sit.oop1.enums.UserMessages;
 import bg.tu_varna.sit.oop1.reporters.StudentReporter;
-import bg.tu_varna.sit.oop1.serialization.deserializer.ProgramDeserializer;
-import bg.tu_varna.sit.oop1.serialization.deserializer.StudentDeserializer;
 import bg.tu_varna.sit.oop1.repositories.ProgramRepository;
 import bg.tu_varna.sit.oop1.repositories.StudentRepository;
-import bg.tu_varna.sit.oop1.serialization.serializer.StudentSerializer;
 import bg.tu_varna.sit.oop1.services.StudentService;
-import bg.tu_varna.sit.oop1.utilities.FileManager;
 
-import java.io.*;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -21,21 +16,16 @@ import java.util.Scanner;
  * The Execute class is handling user inputs and executing corresponding commands.
  */
 public class Execute {
-    private String pathToProgramsDatabaseFile = ".\\ProgramsData.txt";
     private String pathToFileHelp = ".\\HelpInfo.txt";
 
     private Scanner scanner;
-    private StudentSerializer studentSerializer;
-    private StudentDeserializer studentDeserializer;
     private StudentService studentService;
-    private FileManager studentsFileManager;
-
-    private ProgramDeserializer programDeserializer;
-    private FileManager programFileManager;
 
     private StudentReporter studentReporter;
     private StudentRepository studentRepository;
     private ProgramRepository programRepository;
+
+    private CommandLine commandLine;
 
     /**
      * Constructor to initialize the repositories, serializers, deserializers, services, and file managers.
@@ -44,16 +34,12 @@ public class Execute {
         this.studentRepository = new StudentRepository();
         this.programRepository = new ProgramRepository();
 
-        this.studentSerializer = new StudentSerializer();
-        this.studentDeserializer = new StudentDeserializer();
         this.studentService = new StudentService(studentRepository, programRepository);
 
-        this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, studentRepository);
         this.studentReporter = new StudentReporter(studentRepository);
         this.scanner = new Scanner(System.in);
 
-        this.programDeserializer = new ProgramDeserializer();
-        this.programFileManager = new FileManager(programDeserializer, programRepository);
+        this.commandLine = new CommandLine(studentRepository, programRepository);
     }
 
     /**
@@ -89,13 +75,11 @@ public class Execute {
             }
 
             if(command.equals("EXIT")) {
-                System.out.println(UserMessages.EXIT.message);
-                return;
+                this.commandLine.exit();
             }
 
             if (command.equals("HELP")) {
-                String helpInfo = getHelpInfo(pathToFileHelp);
-                System.out.println(helpInfo);
+                this.commandLine.help(pathToFileHelp);
                 continue;
             }
 
@@ -106,8 +90,7 @@ public class Execute {
                         filePath = commandParts[1];
                         fileName = getFileName(filePath);
 
-                        studentsFileManager.open(filePath);
-                        programFileManager.open(pathToProgramsDatabaseFile);
+                        this.commandLine.open(filePath);
                     }
 
                     System.out.println("Successfully opened " + fileName);
@@ -127,8 +110,7 @@ public class Execute {
                         case "CLOSE":
                             necessaryCommandParts = 1;
                             if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-                                studentsFileManager.close();
-                                programFileManager.close();
+                                this.commandLine.close();
                                 isFileLoaded = false;
                                 System.out.println("Successfully closed " + fileName);
                             }
@@ -136,7 +118,7 @@ public class Execute {
                         case "SAVE":
                             necessaryCommandParts = 1;
                             if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
-                                studentsFileManager.save(filePath);
+                                this.commandLine.save(filePath);
                                 System.out.println("Successfully saved " + fileName);
                             }
                             break;
@@ -145,7 +127,7 @@ public class Execute {
                             if(checkCommandPartsLength(commandParts, necessaryCommandParts)) {
                                 String newPath = commandParts[1];
                                 String anotherFileName = getFileName(newPath);
-                                studentsFileManager.save(newPath);
+                                this.commandLine.save(newPath);
                                 System.out.println("Successfully saved another " + anotherFileName);
                             }
                             break;
@@ -159,27 +141,6 @@ public class Execute {
                 System.out.println("Error: " + e.getMessage());
             }
         }
-    }
-
-    /**
-     * Retrieves help information from a specified file.
-     *
-     * @param pathToFileHelp The path to the help file.
-     * @return A string containing the help information.
-     */
-    private String getHelpInfo(String pathToFileHelp) {
-        StringBuilder sb = new StringBuilder();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathToFileHelp))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append(System.lineSeparator());
-            }
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
-        return sb.toString();
     }
 
     /**
