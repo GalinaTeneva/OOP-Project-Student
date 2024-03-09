@@ -160,6 +160,14 @@ public class Execute {
         }
     }
 
+    /**
+     * Validates if the given number of arguments matches the expected count for the specified command.
+     *
+     * @param command The command for which the arguments count needs validation.
+     * @param argumentsCount The number of arguments provided.
+     * @param validCommands A map containing valid commands and their corresponding expected argument counts.
+     * @return true if the provided arguments count matches the expected count for the command, otherwise false.
+     */
     private boolean ValidateArgumentsCount(String command, int argumentsCount, HashMap<String, Integer> validCommands) {
         int neededCount = validCommands.get(command);
         if (neededCount == argumentsCount) {
@@ -169,6 +177,11 @@ public class Execute {
         return false;
     }
 
+    /**
+     * Retrieves all commands and their corresponding argument counts as a HashMap.
+     *
+     * @return A HashMap containing commands as keys and their corresponding argument counts as values.
+     */
     private HashMap<String, Integer> getCommands() {
         Command[] commands = Command.values();
         HashMap<String, Integer> commandMap = new HashMap<>();
