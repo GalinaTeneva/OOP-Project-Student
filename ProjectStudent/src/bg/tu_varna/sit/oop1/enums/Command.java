@@ -1,7 +1,5 @@
 package bg.tu_varna.sit.oop1.enums;
 
-import java.util.HashMap;
-
 public enum Command {
     OPEN(2),
     CLOSE(1),
