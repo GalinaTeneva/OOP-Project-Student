@@ -68,12 +68,12 @@ public class Execute {
 
             //Checking if the given arguments' count is valid
             boolean areArgumentsCorrectCount = ValidateArgumentsCount(command, commandParts.length, validCommands);
-            if(!areArgumentsCorrectCount) {
+            if (!areArgumentsCorrectCount) {
                 System.out.println(UserMessages.WRONG_ARGUMENTS_COUNT.message);
                 continue;
             }
 
-            if(command.equals("EXIT")) {
+            if (command.equals("EXIT")) {
                 this.commandLine.exit();
             }
 
@@ -83,77 +83,77 @@ public class Execute {
             }
 
             try {
-                if(command.equals("OPEN") && !isFileLoaded) {
-                        filePath = commandParts[1];
-                        fileName = getFileName(filePath);
+                if (command.equals("OPEN") && !isFileLoaded) {
+                    filePath = commandParts[1];
+                    fileName = getFileName(filePath);
 
-                        this.commandLine.open(filePath);
+                    this.commandLine.open(filePath);
 
                     System.out.println("Successfully opened " + fileName);
                     isFileLoaded = true;
                     continue;
                 }
 
-                if(!isFileLoaded) {
+                if (!isFileLoaded) {
                     throw new Exception(UserMessages.FILE_NOT_LOADED.message);
                 }
 
-                    switch (command) {
-                        case "OPEN":
-                            System.out.println(fileName + " is already opened.");
-                            break;
-                        case "CLOSE":
-                                this.commandLine.close();
-                                isFileLoaded = false;
-                                System.out.println("Successfully closed " + fileName);
-                            break;
-                        case "SAVE":
-                                this.commandLine.save(filePath);
-                                System.out.println("Successfully saved " + fileName);
-                            break;
-                        case "SAVEAS":
-                                String newPath = commandParts[1];
-                                String anotherFileName = getFileName(newPath);
-                                this.commandLine.save(newPath);
-                                System.out.println("Successfully saved another " + anotherFileName);
-                            break;
-                        case "ENROLL":
-                                studentService.enroll(commandParts);
-                            break;
-                        case "ADVANCE":
-                                studentService.advance(commandParts);
-                            break;
-                        case "CHANGE":
-                                studentService.change(commandParts);
-                            break;
-                        case "GRADUATE":
-                                studentService.graduate(commandParts);
-                            break;
-                        case "INTERRUPT":
-                                studentService.interrupt(commandParts);
-                            break;
-                        case "RESUME":
-                                studentService.resume(commandParts);
-                            break;
-                        case "ENROLLIN":
-                                studentService.enrollIn(commandParts);
-                            break;
-                        case "ADDGRADE":
-                                studentService.addGrade(commandParts);
-                            break;
-                        case "PRINT":
-                                studentReporter.print(commandParts);
-                            break;
-                        case "PRINTALL":
-                                studentReporter.printAll(commandParts);
-                            break;
-                        case "PROTOCOL":
-                                studentReporter.protocol(commandParts);
-                            break;
-                        case "REPORT":
-                                studentReporter.report(commandParts);
-                            break;
-                    }
+                switch (command) {
+                    case "OPEN":
+                        System.out.println(fileName + " is already opened.");
+                        break;
+                    case "CLOSE":
+                        this.commandLine.close();
+                        isFileLoaded = false;
+                        System.out.println("Successfully closed " + fileName);
+                        break;
+                    case "SAVE":
+                        this.commandLine.save(filePath);
+                        System.out.println("Successfully saved " + fileName);
+                        break;
+                    case "SAVEAS":
+                        String newPath = commandParts[1];
+                        String anotherFileName = getFileName(newPath);
+                        this.commandLine.save(newPath);
+                        System.out.println("Successfully saved another " + anotherFileName);
+                        break;
+                    case "ENROLL":
+                        studentService.enroll(commandParts);
+                        break;
+                    case "ADVANCE":
+                        studentService.advance(commandParts);
+                        break;
+                    case "CHANGE":
+                        studentService.change(commandParts);
+                        break;
+                    case "GRADUATE":
+                        studentService.graduate(commandParts);
+                        break;
+                    case "INTERRUPT":
+                        studentService.interrupt(commandParts);
+                        break;
+                    case "RESUME":
+                        studentService.resume(commandParts);
+                        break;
+                    case "ENROLLIN":
+                        studentService.enrollIn(commandParts);
+                        break;
+                    case "ADDGRADE":
+                        studentService.addGrade(commandParts);
+                        break;
+                    case "PRINT":
+                        studentReporter.print(commandParts);
+                        break;
+                    case "PRINTALL":
+                        studentReporter.printAll(commandParts);
+                        break;
+                    case "PROTOCOL":
+                        studentReporter.protocol(commandParts);
+                        break;
+                    case "REPORT":
+                        studentReporter.report(commandParts);
+                        break;
+                }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
             }
@@ -163,9 +163,9 @@ public class Execute {
     /**
      * Validates if the given number of arguments matches the expected count for the specified command.
      *
-     * @param command The command for which the arguments count needs validation.
+     * @param command        The command for which the arguments count needs validation.
      * @param argumentsCount The number of arguments provided.
-     * @param validCommands A map containing valid commands and their corresponding expected argument counts.
+     * @param validCommands  A map containing valid commands and their corresponding expected argument counts.
      * @return true if the provided arguments count matches the expected count for the command, otherwise false.
      */
     private boolean ValidateArgumentsCount(String command, int argumentsCount, HashMap<String, Integer> validCommands) {
@@ -202,6 +202,6 @@ public class Execute {
     private String getFileName(String path) {
         String[] filePathParts = path.split("\\\\");
         String fileName = filePathParts[filePathParts.length - 1];
-        return  fileName;
+        return fileName;
     }
 }
