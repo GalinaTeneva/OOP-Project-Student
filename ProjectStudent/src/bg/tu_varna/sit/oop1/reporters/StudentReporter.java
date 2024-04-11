@@ -62,6 +62,11 @@ public class StudentReporter implements Reportable {
                 .filter(student -> student.getProgram().getName().equals(programName))
                 .collect(Collectors.toList());
 
+        if (filteredStudents.isEmpty())
+        {
+            System.out.println("There are no enrolled students in this program or year.");
+        }
+
         //Serializes each item from the collection above and prints the result
         for (Student student : filteredStudents) {
             String studentReport = serializer.serialize(student);
