@@ -30,12 +30,7 @@ public class Execute {
     public Execute() {
         this.studentRepository = new StudentRepository();
         this.programRepository = new ProgramRepository();
-
-        this.studentService = new StudentService(studentRepository, programRepository);
-
-        this.studentReporter = new StudentReporter(studentRepository);
         this.scanner = new Scanner(System.in);
-
         this.commandLine = new CommandLine(studentRepository, programRepository);
     }
 
@@ -118,40 +113,40 @@ public class Execute {
                         System.out.println("Successfully saved another " + anotherFileName);
                         break;
                     case "ENROLL":
-                        studentService.enroll(commandParts);
+                        this.commandLine.enroll(commandParts);
                         break;
                     case "ADVANCE":
-                        studentService.advance(commandParts);
+                        this.commandLine.advance(commandParts);
                         break;
                     case "CHANGE":
-                        studentService.change(commandParts);
+                        this.commandLine.change(commandParts);
                         break;
                     case "GRADUATE":
-                        studentService.graduate(commandParts);
+                        this.commandLine.graduate(commandParts);
                         break;
                     case "INTERRUPT":
-                        studentService.interrupt(commandParts);
+                        this.commandLine.interrupt(commandParts);
                         break;
                     case "RESUME":
-                        studentService.resume(commandParts);
+                        this.commandLine.resume(commandParts);
                         break;
                     case "ENROLLIN":
-                        studentService.enrollIn(commandParts);
+                        this.commandLine.enrollIn(commandParts);
                         break;
                     case "ADDGRADE":
-                        studentService.addGrade(commandParts);
+                        this.commandLine.addGrade(commandParts);
                         break;
                     case "PRINT":
-                        studentReporter.print(commandParts);
+                        this.commandLine.print(commandParts);
                         break;
                     case "PRINTALL":
-                        studentReporter.printAll(commandParts);
+                        this.commandLine.printAll(commandParts);
                         break;
                     case "PROTOCOL":
-                        studentReporter.protocol(commandParts);
+                        this.commandLine.protocol(commandParts);
                         break;
                     case "REPORT":
-                        studentReporter.report(commandParts);
+                        this.commandLine.report(commandParts);
                         break;
                 }
             } catch (Exception e) {

@@ -1,11 +1,14 @@
 package bg.tu_varna.sit.oop1;
 
 import bg.tu_varna.sit.oop1.enums.UserMessages;
+import bg.tu_varna.sit.oop1.exceptions.StudentException;
+import bg.tu_varna.sit.oop1.reporters.StudentReporter;
 import bg.tu_varna.sit.oop1.repositories.ProgramRepository;
 import bg.tu_varna.sit.oop1.repositories.StudentRepository;
 import bg.tu_varna.sit.oop1.serialization.deserializer.ProgramDeserializer;
 import bg.tu_varna.sit.oop1.serialization.deserializer.StudentDeserializer;
 import bg.tu_varna.sit.oop1.serialization.serializer.StudentSerializer;
+import bg.tu_varna.sit.oop1.services.StudentService;
 import bg.tu_varna.sit.oop1.utilities.FileManager;
 
 import java.io.BufferedReader;
@@ -25,6 +28,8 @@ public class CommandLine implements CommandLineInterface {
     private FileManager programFileManager;
     private StudentRepository studentRepository;
     private ProgramRepository programRepository;
+    private StudentService studentService;
+    private StudentReporter studentReporter;
 
     /**
      * Constructs a CommandLine instance.
@@ -40,6 +45,8 @@ public class CommandLine implements CommandLineInterface {
         this.programDeserializer = new ProgramDeserializer();
         this.studentsFileManager = new FileManager(studentSerializer, studentDeserializer, studentRepository);
         this.programFileManager = new FileManager(programDeserializer, programRepository);
+        this.studentService = new StudentService(studentRepository, programRepository);
+        this.studentReporter = new StudentReporter(studentRepository);
     }
 
     /**
@@ -92,6 +99,133 @@ public class CommandLine implements CommandLineInterface {
     public void exit() {
         System.out.println(UserMessages.EXIT.message);
         System.exit(0);
+    }
+
+    /**
+     * Enrolls a student into a program based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     * @throws StudentException If there is an issue with enrolling the student.
+     */
+    @Override
+    public void enroll(String[] commandParts) throws StudentException {
+        this.studentService.enroll(commandParts);
+    }
+
+    /**
+     * Advances a student to the next academic year based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     * @throws StudentException If there is an issue with advancing the student.
+     */
+    @Override
+    public void advance(String[] commandParts) throws StudentException {
+        this.studentService.advance(commandParts);
+    }
+
+    /**
+     * Changes a student's program or course based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     * @throws Exception If there is an issue with changing the student's program or course.
+     */
+    @Override
+    public void change(String[] commandParts) throws Exception {
+        this.studentService.change(commandParts);
+    }
+
+    /**
+     * Graduates a student based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     * @throws StudentException If there is an issue with graduating the student.
+     */
+    @Override
+    public void graduate(String[] commandParts) throws StudentException {
+        this.studentService.graduate(commandParts);
+    }
+
+    /**
+     * Interrupts a student's education based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     * @throws StudentException If there is an issue with interrupting the student's education.
+     */
+    @Override
+    public void interrupt(String[] commandParts) throws StudentException {
+        this.studentService.interrupt(commandParts);
+    }
+
+    /**
+     * Resumes a student's interrupted education based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     * @throws StudentException If there is an issue with resuming the student's education.
+     */
+    @Override
+    public void resume(String[] commandParts) throws StudentException {
+        this.studentService.resume(commandParts);
+    }
+
+    /**
+     * Enrolls a student in a course based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     */
+    @Override
+    public void enrollIn(String[] commandParts) {
+        this.studentService.enrollIn(commandParts);
+    }
+
+    /**
+     * Adds a grade for a student based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     * @throws StudentException If there is an issue with adding the grade.
+     */
+    @Override
+    public void addGrade(String[] commandParts) throws StudentException {
+        this.studentService.addGrade(commandParts);
+    }
+
+    /**
+     * Prints a report for a specific student based on the given command parts.
+     *
+     * @param commandParts An array containing the command parts.
+     */
+    @Override
+    public void print(String[] commandParts) {
+        this.studentReporter.print(commandParts);
+    }
+
+    /**
+     * Prints information about all students based on the provided command parts.
+     *
+     * @param commandParts An array containing the command parts including optional filters.
+     */
+    @Override
+    public void printAll(String[] commandParts) {
+        this.studentReporter.printAll(commandParts);
+    }
+
+    /**
+     * Generates a protocol for all students enrolled in a specific subject.
+     *
+     * @param commandParts An array containing the command parts.
+     */
+    @Override
+    public void protocol(String[] commandParts) {
+        this.studentReporter.protocol(commandParts);
+    }
+
+    /**
+     * Generates a report for all grades of a student and his/hers average grade.
+     *
+     * @param commandParts An array containing the command parts including the student's ID.
+     */
+    @Override
+    public void report(String[] commandParts) {
+        this.studentReporter.report(commandParts);
     }
 
     /**
