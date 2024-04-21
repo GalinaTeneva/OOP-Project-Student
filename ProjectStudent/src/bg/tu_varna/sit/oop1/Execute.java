@@ -1,5 +1,6 @@
 package bg.tu_varna.sit.oop1;
 
+import bg.tu_varna.sit.oop1.commandLine.CommandLine;
 import bg.tu_varna.sit.oop1.enums.*;
 import bg.tu_varna.sit.oop1.reporters.StudentReporter;
 import bg.tu_varna.sit.oop1.repositories.ProgramRepository;

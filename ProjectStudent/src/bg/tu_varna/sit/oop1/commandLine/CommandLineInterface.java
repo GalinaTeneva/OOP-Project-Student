@@ -1,4 +1,4 @@
-package bg.tu_varna.sit.oop1;
+package bg.tu_varna.sit.oop1.commandLine;
 
 import bg.tu_varna.sit.oop1.exceptions.StudentException;
 
